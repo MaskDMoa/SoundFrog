@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'self'; media-src 'self' file:; img-src 'self' file: data:; style-src 'self'; script-src 'self'">
+<title>soundFrog</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="titlebar">
+  <img class="logo" src="../../assets/icon.png" alt="">
+  <span class="wordmark">sound<b>Frog</b></span>
+  <span class="tagline">soundboard</span>
+</div>
+
+<header class="toolbar">
+  <div class="card routing">
+    <span class="card-title">Roteamento</span>
+    <div class="fields">
+      <label>
+        <span>Vai pro microfone</span>
+        <div class="select"><select id="micOut"></select></div>
+      </label>
+      <label>
+        <span>Voc&ecirc; ouve em</span>
+        <div class="select"><select id="monitorOut"></select></div>
+      </label>
+    </div>
+  </div>
+
+  <div class="card volumes">
+    <span class="card-title">Volume</span>
+    <div class="fields">
+      <label>
+        <span>Geral <output id="masterVal">80%</output></span>
+        <input id="master" type="range" min="0" max="100" value="80">
+      </label>
+      <label>
+        <span>Seu fone <output id="monitorVal">80%</output></span>
+        <input id="monitorVol" type="range" min="0" max="100" value="80">
+      </label>
+    </div>
+  </div>
+
+  <div class="card-actions">
+    <button id="hotkeyToggle" class="pill" type="button">
+      <span class="dot"></span><span class="pill-text">Hotkeys ativas</span>
+    </button>
+    <button id="stopAll" class="stop" type="button">Parar tudo</button>
+  </div>
+</header>
+
+<main>
+  <aside class="library">
+    <div class="library-head">
+      <div class="search">
+        <input id="search" type="search" placeholder="Buscar som..." autocomplete="off">
+      </div>
+      <div class="row">
+        <button id="addFiles" type="button">Arquivos</button>
+        <button id="addFolder" type="button">Pasta</button>
+      </div>
+    </div>
+    <ul id="list" class="list"></ul>
+    <p class="hint">Arraste um som at&eacute; um slot. Bot&atilde;o direito no slot limpa.</p>
+  </aside>
+
+  <section class="board">
+    <nav id="pages" class="pages"></nav>
+    <div id="grid" class="grid"></div>
+
+    <div class="recorder">
+      <span class="card-title">Gravar</span>
+      <div class="select compact"><select id="recSource">
+        <option value="mic">Meu microfone</option>
+        <option value="system">&Aacute;udio do sistema</option>
+      </select></div>
+      <div class="select compact"><select id="recMicIn"></select></div>
+      <button id="recToggle" class="rec" type="button"><span class="dot"></span>Gravar</button>
+      <span class="divider"></span>
+      <button id="bufferToggle" type="button">Buffer <b id="bufSecs">30</b>s: off</button>
+      <button id="bufferGrab" type="button" disabled>Salvar &uacute;ltimos <b id="bufSecs2">30</b>s</button>
+      <span id="recStatus" class="status"></span>
+    </div>
+  </section>
+</main>
+
+<footer class="statusbar">
+  <span class="meter"><i id="meterDot"></i><span id="playing">nada tocando</span></span>
+  <span id="devInfo"></span>
+  <button id="openData" class="link" type="button">pasta de dados</button>
+</footer>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

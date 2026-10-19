@@ -1,0 +1,46 @@
+{
+  "name": "soundfrog",
+  "version": "0.1.0",
+  "description": "Soundboard para Windows: toca seus sons no microfone e no fone ao mesmo tempo, com hotkeys globais, hotbar de 9 paginas e gravacao de mic/sistema.",
+  "main": "src/main/main.js",
+  "author": "aleat",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "dist": "electron-builder",
+    "dist:dir": "electron-builder --dir"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.aleat.soundfrog",
+    "productName": "soundFrog",
+    "files": [
+      "src/**/*",
+      "assets/**/*"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "soundFrog"
+    }
+  }
+}
