@@ -33,17 +33,19 @@ Cada saída é um elemento `<audio>` próprio com `setSinkId()` apontando para o
 - **Gravação**: microfone ou áudio do sistema, com replay buffer dos últimos 30s
 - **Falar (TTS)**: digite e sua fala sai no microfone, usando as vozes do Windows
 
-## Pré-requisito: um cabo de áudio virtual
+## O cabo de áudio virtual já vem junto
 
-Instale **[VB-CABLE](https://vb-audio.com/Cable/)** (gratuito). Ele cria o par `CABLE Input` / `CABLE Output`.
+O instalador pergunta se você quer instalar o **VB-CABLE**, que cria o par `CABLE Input` / `CABLE Output`. Você não precisa baixar nada. Quem recusar pode instalar depois pelo próprio app — ele detecta a ausência e mostra um botão.
 
-Depois:
+> VB-CABLE é da **VB-Audio Software** ([vb-cable.com](https://vb-cable.com)), incluído **sem modificações** com autorização de Vincent Burel para **uso não comercial**. É donationware — [considere doar](https://vb-audio.com/Services/licensing.htm).
+> Se você for fazer fork comercial, leia [vendor/README.md](vendor/README.md) antes: a autorização não se estende a você.
 
-1. No soundFrog, em **Microfone (cabo virtual)**, escolha `CABLE Input`.
+Depois do cabo instalado e do PC reiniciado:
+
+1. Na aba **Dispositivos**, escolha `CABLE Input` em **Vai pro microfone**.
 2. Em **Você ouve em**, escolha seu fone.
 3. No Discord/OBS/jogo, defina o microfone como `CABLE Output`.
-
-4. Em **Sua voz**, escolha seu microfone real e ligue a **Passagem**. Agora o Discord ouve você e os sons pelo mesmo dispositivo.
+4. Na aba **Sua voz**, escolha seu microfone real e ligue a **Passagem**. Agora o Discord ouve você e os sons pelo mesmo dispositivo.
 
 > Sem a passagem ligada, o app de voz ouve **só os sons**. A passagem substitui o VoiceMeeter: o soundFrog abre seu microfone e o reinjeta no cabo em tempo real.
 >

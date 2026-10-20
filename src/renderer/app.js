@@ -23,6 +23,7 @@ let liveHotkeys = new Set();
 let editing = null;
 let editDuration = 0;
 let visible = [];          // sons na ordem em que a tabela mostra
+let setupDismissed = false;
 const recorder = new Recorder();
 let recMode = null;
 
@@ -73,14 +74,15 @@ async function refreshDevices() {
 
   $('devInfo').textContent = `${outputs.length} saidas / ${inputs.length} entradas`;
 
-  if (!state.settings.micDeviceId) {
-    const cable = outputs.find((d) => /cable input|voicemeeter input|virtual/i.test(d.label));
-    if (cable) {
-      await pushSettings({ micDeviceId: cable.deviceId });
-      $('micOut').value = cable.deviceId;
-      setStatus(`Cabo virtual detectado: ${cable.label}`);
-    }
+  const cable = outputs.find((d) => /cable input|voicemeeter|virtual audio/i.test(d.label));
+  if (cable && !state.settings.micDeviceId) {
+    await pushSettings({ micDeviceId: cable.deviceId });
+    $('micOut').value = cable.deviceId;
+    setStatus(`Cabo virtual detectado: ${cable.label}`);
   }
+
+  // Sem cabo o app toca so no fone; avisa antes que pareca defeito.
+  $('setup').classList.toggle('hidden', Boolean(cable) || setupDismissed);
 }
 
 /* ========================================================= passagem ====== */
@@ -925,6 +927,32 @@ function wireControls() {
   });
 
   $('openData').addEventListener('click', () => frog.openDataFolder());
+
+  $('setupDonate').addEventListener('click', () =>
+    frog.openExternal('https://vb-audio.com/Services/licensing.htm'));
+
+  $('setupInstall').addEventListener('click', async () => {
+    const button = $('setupInstall');
+    const msg = $('setupMsg');
+    button.disabled = true;
+    button.textContent = 'Instalando...';
+    msg.textContent = 'Confirme na janela do Windows. O instalador e da propria VB-Audio.';
+    try {
+      await frog.installCable();
+      msg.innerHTML = '<b>Cabo instalado.</b> Reinicie o computador para o Windows '
+        + 'reconhecer o dispositivo; depois o soundFrog o encontra sozinho.';
+      button.textContent = 'Pronto';
+    } catch (err) {
+      msg.textContent = err.message;
+      button.disabled = false;
+      button.textContent = 'Tentar de novo';
+    }
+  });
+
+  $('setupDismiss').addEventListener('click', () => {
+    setupDismissed = true;
+    $('setup').classList.add('hidden');
+  });
 
   // atalhos de teclado da janela
   document.addEventListener('keydown', (event) => {

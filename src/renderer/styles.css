@@ -31,8 +31,10 @@ html, body { height: 100%; }
 
 body {
   margin: 0;
-  display: grid;
-  grid-template-rows: var(--title-h) auto 1fr auto;
+  /* Flex em vez de grid: o aviso do cabo some e aparece, e um
+     grid-template-rows fixo desalinharia as faixas quando ele sai. */
+  display: flex;
+  flex-direction: column;
   background:
     radial-gradient(1100px 520px at 18% -12%, rgba(142, 208, 50, 0.10), transparent 62%),
     radial-gradient(760px 420px at 100% 110%, rgba(60, 130, 40, 0.09), transparent 60%),

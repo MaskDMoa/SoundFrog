@@ -1,0 +1,69 @@
+soundFrog - soundboard para Windows
+===================================
+
+O QUE ELE FAZ
+
+Toca seus sons no microfone e no seu fone ao mesmo tempo, com atalhos
+globais, hotbar de 9 paginas, gravador, editor de corte e conversao de
+texto em fala.
+
+
+O CABO DE AUDIO VIRTUAL JA VEM JUNTO
+
+Para que o Discord (ou qualquer app de voz) ouca os sons, o Windows
+precisa de um microfone virtual. O VB-CABLE acompanha este instalador,
+que vai perguntar se voce quer instala-lo. Voce nao precisa baixar nada.
+
+VB-CABLE e um produto da VB-Audio Software (www.vb-cable.com),
+distribuido aqui sem modificacoes, com autorizacao do autor para uso
+nao comercial. E donationware: se puder, considere doar em
+https://vb-audio.com/Services/licensing.htm
+
+Depois que o cabo for instalado e o computador reiniciado:
+
+  1. No soundFrog, aba "Dispositivos", escolha CABLE Input
+     em "Vai pro microfone".
+  2. Em "Voce ouve em", escolha seu fone.
+  3. No Discord, defina o microfone como CABLE Output.
+  4. Na aba "Sua voz", ligue a Passagem para que o Discord
+     ouca voce junto com os sons.
+
+Se voce recusar a instalacao do cabo, o soundFrog funciona mesmo assim,
+mas os sons tocam apenas no seu fone. O proprio app detecta a ausencia
+do cabo e oferece instalar com um clique.
+
+
+AVISO DO WINDOWS
+
+Este instalador nao tem assinatura digital, entao o Windows pode exibir
+"O Windows protegeu o seu computador". Clique em "Mais informacoes" e
+depois em "Executar assim mesmo".
+
+
+LICENCA (MIT)
+
+Copyright (c) 2026 aleat
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+VB-CABLE e um produto da VB-Audio Software, Copyright (c) Vincent Burel
+2010-2024, incluido neste instalador sem modificacoes e com autorizacao
+do autor para uso estritamente NAO COMERCIAL. A licenca MIT acima cobre
+apenas o codigo do soundFrog, nao o VB-CABLE.

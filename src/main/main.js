@@ -6,6 +6,7 @@ const crypto = require('node:crypto');
 const store = require('./store');
 const hotkeys = require('./hotkeys');
 const tts = require('./tts');
+const cable = require('./cable');
 
 const AUDIO_EXT = new Set(['.mp3', '.wav', '.ogg', '.oga', '.m4a', '.aac', '.flac', '.opus', '.webm']);
 const RECORDINGS_DIR = path.join(app.getPath('userData'), 'recordings');
@@ -355,6 +356,21 @@ ipcMain.handle('file:read', async (_e, filePath) => {
   const buffer = await fs.promises.readFile(filePath);
   // Devolve o ArrayBuffer exato, sem o resto do pool do Buffer do Node.
   return buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength);
+});
+
+// So abrimos links https que nos mesmos indicamos; nada vindo da lista.
+const ALLOWED_LINKS = new Set([
+  'https://vb-audio.com/Cable/',
+  'https://vb-audio.com/Services/licensing.htm',
+]);
+
+ipcMain.handle('cable:install', async () => {
+  await cable.install();
+  return { ok: true };
+});
+
+ipcMain.handle('app:openExternal', (_e, url) => {
+  if (ALLOWED_LINKS.has(url)) shell.openExternal(url);
 });
 
 ipcMain.handle('app:openDataFolder', () => shell.openPath(app.getPath('userData')));

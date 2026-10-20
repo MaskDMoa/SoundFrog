@@ -64,6 +64,22 @@
   </div>
 </header>
 
+<!-- Primeira execucao sem cabo virtual: o app so toca no fone, entao vale
+     explicar antes que a pessoa ache que esta quebrado. -->
+<div class="setup hidden" id="setup">
+  <img class="setup-logo" src="../../assets/icon.png" alt="">
+  <div class="setup-text">
+    <strong>Falta um cabo de &aacute;udio virtual</strong>
+    <p id="setupMsg">Sem ele os sons tocam s&oacute; no seu fone &mdash; o Discord n&atilde;o ouve nada.
+       O <b>VB-CABLE</b> j&aacute; vem junto: clique para instalar e reinicie o PC.</p>
+    <p class="credit">VB-CABLE &eacute; da <b>VB-Audio</b> (vb-cable.com), distribu&iacute;do sem
+       modifica&ccedil;&otilde;es. &Eacute; donationware &mdash;
+       <button id="setupDonate" type="button" class="linkish">considere doar</button>.</p>
+  </div>
+  <button id="setupInstall" type="button" class="setup-cta">Instalar cabo</button>
+  <button id="setupDismiss" type="button" class="setup-x" title="Dispensar">&times;</button>
+</div>
+
 <main>
   <!-- Arvore de categorias -->
   <aside class="cats-pane">

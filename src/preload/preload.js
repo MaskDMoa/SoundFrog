@@ -38,6 +38,8 @@ contextBridge.exposeInMainWorld('frog', {
   // Bytes crus de um arquivo local, para o Web Audio decodificar.
   readFile: (filePath) => ipcRenderer.invoke('file:read', filePath),
 
+  installCable: () => ipcRenderer.invoke('cable:install'),
+  openExternal: (url) => ipcRenderer.invoke('app:openExternal', url),
   openDataFolder: () => ipcRenderer.invoke('app:openDataFolder'),
   hotkeyList: () => ipcRenderer.invoke('app:hotkeyList'),
 
