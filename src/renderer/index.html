@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy"
-      content="default-src 'self'; media-src 'self' file:; img-src 'self' file: data:; style-src 'self'; script-src 'self'">
+      content="default-src 'self'; media-src 'self' file:; img-src 'self' file: data:; style-src 'self'; script-src 'self'; connect-src 'self' file:">
 <title>soundFrog</title>
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -16,7 +16,7 @@
 </div>
 
 <header class="toolbar">
-  <div class="card routing">
+  <div class="card">
     <span class="card-title">Roteamento</span>
     <div class="fields">
       <label>
@@ -30,14 +30,42 @@
     </div>
   </div>
 
-  <div class="card volumes">
-    <span class="card-title">Volume</span>
+  <div class="card">
+    <span class="card-title">Sua voz</span>
     <div class="fields">
       <label>
+        <span>Microfone real</span>
+        <div class="select"><select id="passDevice"></select></div>
+      </label>
+      <label class="narrow">
+        <span>Ganho <output id="passGainVal">100%</output></span>
+        <input id="passGain" type="range" min="0" max="200" value="100">
+      </label>
+      <label class="stacked">
+        <span>&nbsp;</span>
+        <button id="passToggle" class="pill" type="button">
+          <span class="dot"></span><span class="pill-text">Passagem off</span>
+        </button>
+      </label>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="card-title">Sa&iacute;da e volume</span>
+    <div class="fields">
+      <label class="auto">
+        <span>Destino</span>
+        <div class="segmented" id="target">
+          <button type="button" data-value="both">Ambos</button>
+          <button type="button" data-value="mic">S&oacute; mic</button>
+          <button type="button" data-value="monitor">S&oacute; fone</button>
+        </div>
+      </label>
+      <label class="narrow">
         <span>Geral <output id="masterVal">80%</output></span>
         <input id="master" type="range" min="0" max="100" value="80">
       </label>
-      <label>
+      <label class="narrow">
         <span>Seu fone <output id="monitorVal">80%</output></span>
         <input id="monitorVol" type="range" min="0" max="100" value="80">
       </label>
@@ -58,37 +86,111 @@
       <div class="search">
         <input id="search" type="search" placeholder="Buscar som..." autocomplete="off">
       </div>
+      <div id="cats" class="cats"></div>
       <div class="row">
         <button id="addFiles" type="button">Arquivos</button>
         <button id="addFolder" type="button">Pasta</button>
       </div>
     </div>
     <ul id="list" class="list"></ul>
-    <p class="hint">Arraste um som at&eacute; um slot. Bot&atilde;o direito no slot limpa.</p>
+    <p class="hint">Arraste at&eacute; um slot. Clique no nome para tocar, na engrenagem para editar.</p>
   </aside>
 
   <section class="board">
-    <nav id="pages" class="pages"></nav>
+    <nav class="board-head">
+      <div id="pages" class="pages"></div>
+      <button id="autoKeys" type="button" title="Preenche os slots vazios com os sons que ainda nao estao em nenhuma pagina">Auto-keys</button>
+      <button id="clearPage" type="button" title="Esvazia a pagina atual">Limpar p&aacute;gina</button>
+    </nav>
+
     <div id="grid" class="grid"></div>
 
-    <div class="recorder">
-      <span class="card-title">Gravar</span>
-      <div class="select compact"><select id="recSource">
-        <option value="mic">Meu microfone</option>
-        <option value="system">&Aacute;udio do sistema</option>
-      </select></div>
-      <div class="select compact"><select id="recMicIn"></select></div>
-      <button id="recToggle" class="rec" type="button"><span class="dot"></span>Gravar</button>
-      <span class="divider"></span>
-      <button id="bufferToggle" type="button">Buffer <b id="bufSecs">30</b>s: off</button>
-      <button id="bufferGrab" type="button" disabled>Salvar &uacute;ltimos <b id="bufSecs2">30</b>s</button>
-      <span id="recStatus" class="status"></span>
+    <div class="nowplaying" id="nowplaying" data-has="false">
+      <button id="playPause" type="button" class="icon" title="Pausar / continuar">&#9208;</button>
+      <span id="npName" class="np-name">nada tocando</span>
+      <span id="npTime" class="np-time">0:00</span>
+      <input id="seek" type="range" min="0" max="1000" value="0" title="Avan&ccedil;ar no som">
+      <span id="npDur" class="np-time">0:00</span>
+    </div>
+
+    <div class="panel">
+      <div class="panel-tabs">
+        <button type="button" data-tab="rec" class="on">Gravar</button>
+        <button type="button" data-tab="tts">Falar</button>
+      </div>
+
+      <div class="panel-body" data-tab="rec">
+        <div class="select compact"><select id="recSource">
+          <option value="mic">Meu microfone</option>
+          <option value="system">&Aacute;udio do sistema</option>
+        </select></div>
+        <div class="select compact"><select id="recMicIn"></select></div>
+        <button id="recToggle" class="rec" type="button"><span class="dot"></span>Gravar</button>
+        <span class="divider"></span>
+        <button id="bufferToggle" type="button">Buffer <b>30</b>s: off</button>
+        <button id="bufferGrab" type="button" disabled>Salvar &uacute;ltimos <b>30</b>s</button>
+        <span id="recStatus" class="status"></span>
+      </div>
+
+      <div class="panel-body hidden" data-tab="tts">
+        <input id="ttsText" type="text" placeholder="Digite o que falar no microfone..." maxlength="2000">
+        <div class="select compact"><select id="ttsVoice"></select></div>
+        <label class="inline">vel. <input id="ttsRate" type="range" min="-10" max="10" value="0"></label>
+        <button id="ttsSpeak" type="button">Falar</button>
+        <button id="ttsSave" type="button" title="Guarda a fala como um som na biblioteca">Salvar</button>
+        <span id="ttsStatus" class="status"></span>
+      </div>
     </div>
   </section>
+
+  <aside class="editor hidden" id="editor">
+    <div class="editor-head">
+      <span class="card-title">Editar som</span>
+      <button id="edClose" class="icon" type="button" title="Fechar">&times;</button>
+    </div>
+    <div class="editor-body">
+      <label class="full"><span>Nome</span><input id="edName" type="text" maxlength="120"></label>
+
+      <label class="full"><span>Categoria</span>
+        <input id="edCategory" type="text" list="catList" maxlength="60" placeholder="sem categoria">
+        <datalist id="catList"></datalist>
+      </label>
+
+      <div class="wave-wrap">
+        <canvas id="edWave" width="520" height="92"></canvas>
+      </div>
+
+      <div class="pair">
+        <label><span>In&iacute;cio <output id="edStartVal">0,00s</output></span>
+          <input id="edStart" type="range" min="0" max="1000" value="0"></label>
+        <label><span>Fim <output id="edEndVal">fim</output></span>
+          <input id="edEnd" type="range" min="0" max="1000" value="1000"></label>
+      </div>
+
+      <div class="pair">
+        <label><span>Fade in <output id="edFadeInVal">0,0s</output></span>
+          <input id="edFadeIn" type="range" min="0" max="50" value="0"></label>
+        <label><span>Fade out <output id="edFadeOutVal">0,0s</output></span>
+          <input id="edFadeOut" type="range" min="0" max="50" value="0"></label>
+      </div>
+
+      <label class="full"><span>Volume <output id="edVolVal">100%</output></span>
+        <input id="edVol" type="range" min="0" max="200" value="100"></label>
+
+      <label class="check"><input id="edNorm" type="checkbox">
+        <span>Normalizar (iguala o pico com os outros sons)</span></label>
+
+      <div class="editor-actions">
+        <button id="edPreview" type="button">Ouvir s&oacute; no fone</button>
+        <button id="edReveal" type="button">Ver arquivo</button>
+        <button id="edDelete" class="danger-text" type="button">Remover</button>
+      </div>
+    </div>
+  </aside>
 </main>
 
 <footer class="statusbar">
-  <span class="meter"><i id="meterDot"></i><span id="playing">nada tocando</span></span>
+  <span class="meter"><i></i><span id="playing">nada tocando</span></span>
   <span id="devInfo"></span>
   <button id="openData" class="link" type="button">pasta de dados</button>
 </footer>

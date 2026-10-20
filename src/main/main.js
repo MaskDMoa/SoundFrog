@@ -5,6 +5,7 @@ const crypto = require('node:crypto');
 
 const store = require('./store');
 const hotkeys = require('./hotkeys');
+const tts = require('./tts');
 
 const AUDIO_EXT = new Set(['.mp3', '.wav', '.ogg', '.oga', '.m4a', '.aac', '.flac', '.opus', '.webm']);
 const RECORDINGS_DIR = path.join(app.getPath('userData'), 'recordings');
@@ -110,10 +111,10 @@ function grantMediaPermissions() {
 
 function makeSound(filePath, name) {
   return {
+    ...store.SOUND_DEFAULTS,
     id: crypto.randomUUID(),
     name: name ?? path.basename(filePath, path.extname(filePath)),
     path: filePath,
-    volume: 1,
     addedAt: Date.now(),
   };
 }
@@ -194,19 +195,24 @@ ipcMain.handle('sounds:remove', (_e, id) => {
   return store.get();
 });
 
-ipcMain.handle('sounds:rename', (_e, { id, name }) => {
-  const sound = store.get().sounds.find((s) => s.id === id);
-  if (sound) {
-    sound.name = name;
-    store.save();
-  }
-  return store.get();
-});
+// Campos do editor que o renderer pode alterar, com o saneamento de cada um.
+const SOUND_FIELDS = {
+  name: (v) => String(v).slice(0, 120),
+  volume: (v) => Math.max(0, Math.min(2, Number(v) || 0)),
+  trimStart: (v) => Math.max(0, Number(v) || 0),
+  trimEnd: (v) => Math.max(0, Number(v) || 0),
+  fadeIn: (v) => Math.max(0, Math.min(30, Number(v) || 0)),
+  fadeOut: (v) => Math.max(0, Math.min(30, Number(v) || 0)),
+  normalize: (v) => Boolean(v),
+  category: (v) => String(v).slice(0, 60),
+};
 
-ipcMain.handle('sounds:setVolume', (_e, { id, volume }) => {
+ipcMain.handle('sounds:update', (_e, { id, patch }) => {
   const sound = store.get().sounds.find((s) => s.id === id);
   if (sound) {
-    sound.volume = Math.max(0, Math.min(2, volume));
+    for (const [key, raw] of Object.entries(patch ?? {})) {
+      if (key in SOUND_FIELDS) sound[key] = SOUND_FIELDS[key](raw);
+    }
     store.save();
   }
   return store.get();
@@ -231,6 +237,71 @@ ipcMain.handle('recording:save', (_e, { buffer, suggestedName }) => {
   const file = path.join(RECORDINGS_DIR, `${safe}-${Date.now()}.webm`);
   fs.writeFileSync(file, Buffer.from(buffer));
   return addPaths([file]);
+});
+
+ipcMain.handle('categories:set', (_e, list) => {
+  const state = store.get();
+  state.categories = [...new Set((list ?? []).map((c) => String(c).slice(0, 60)).filter(Boolean))];
+  store.save();
+  return store.get();
+});
+
+// Auto-keys: preenche os slots vazios, pagina por pagina, com os sons que
+// ainda nao estao em lugar nenhum. E o equivalente ao auto-keys do Soundpad.
+ipcMain.handle('pages:autoAssign', () => {
+  const state = store.get();
+  const used = new Set(state.pages.flat().filter(Boolean));
+  const queue = state.sounds
+    .filter((s) => !used.has(s.id))
+    .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+
+  let placed = 0;
+  for (const page of state.pages) {
+    for (let slot = 0; slot < page.length; slot += 1) {
+      if (page[slot] || !queue.length) continue;
+      page[slot] = queue.shift().id;
+      placed += 1;
+    }
+  }
+  store.save();
+  return { placed, remaining: queue.length, state: store.get() };
+});
+
+ipcMain.handle('pages:clearPage', (_e, page) => {
+  const state = store.get();
+  if (state.pages[page]) {
+    state.pages[page] = state.pages[page].map(() => null);
+    store.save();
+  }
+  return store.get();
+});
+
+ipcMain.handle('tts:voices', () => tts.listVoices());
+
+ipcMain.handle('tts:speak', async (_e, options) => {
+  const wav = await tts.speak(options);
+  return { path: wav };
+});
+
+// Guarda a fala na biblioteca, batizada com o inicio do proprio texto.
+ipcMain.handle('tts:save', async (_e, options) => {
+  const wav = await tts.speak(options);
+  const result = addPaths([wav]);
+  const created = store.get().sounds.find((s) => s.path === wav);
+  if (created) {
+    created.name = String(options.text ?? '').trim().slice(0, 40) || 'fala';
+    created.category = 'Fala';
+    store.save();
+  }
+  return { ...result, state: store.get() };
+});
+
+// O renderer nao consegue ler file:// com fetch (o Chromium recusa o esquema,
+// independente de CSP), entao os bytes para decodificar vem por aqui.
+ipcMain.handle('file:read', async (_e, filePath) => {
+  const buffer = await fs.promises.readFile(filePath);
+  // Devolve o ArrayBuffer exato, sem o resto do pool do Buffer do Node.
+  return buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength);
 });
 
 ipcMain.handle('app:openDataFolder', () => shell.openPath(app.getPath('userData')));

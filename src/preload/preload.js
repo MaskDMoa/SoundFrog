@@ -9,17 +9,27 @@ contextBridge.exposeInMainWorld('frog', {
   addFiles: () => ipcRenderer.invoke('sounds:addFiles'),
   addFolder: () => ipcRenderer.invoke('sounds:addFolder'),
   removeSound: (id) => ipcRenderer.invoke('sounds:remove', id),
-  renameSound: (id, name) => ipcRenderer.invoke('sounds:rename', { id, name }),
-  setSoundVolume: (id, volume) => ipcRenderer.invoke('sounds:setVolume', { id, volume }),
+  updateSound: (id, patch) => ipcRenderer.invoke('sounds:update', { id, patch }),
   revealSound: (id) => ipcRenderer.invoke('sounds:reveal', id),
 
+  setCategories: (list) => ipcRenderer.invoke('categories:set', list),
+
   assignSlot: (page, slot, soundId) => ipcRenderer.invoke('pages:assign', { page, slot, soundId }),
+  autoAssign: () => ipcRenderer.invoke('pages:autoAssign'),
+  clearPage: (page) => ipcRenderer.invoke('pages:clearPage', page),
+
+  ttsVoices: () => ipcRenderer.invoke('tts:voices'),
+  ttsSpeak: (options) => ipcRenderer.invoke('tts:speak', options),
+  ttsSave: (options) => ipcRenderer.invoke('tts:save', options),
 
   saveRecording: (buffer, suggestedName) =>
     ipcRenderer.invoke('recording:save', { buffer, suggestedName }),
 
   // Caminho do Windows -> URL que o <audio> aceita (acentos, espacos, '#').
   toFileUrl: (filePath) => pathToFileURL(filePath).href,
+
+  // Bytes crus de um arquivo local, para o Web Audio decodificar.
+  readFile: (filePath) => ipcRenderer.invoke('file:read', filePath),
 
   openDataFolder: () => ipcRenderer.invoke('app:openDataFolder'),
   hotkeyList: () => ipcRenderer.invoke('app:hotkeyList'),

@@ -6,6 +6,7 @@ const FILE = path.join(app.getPath('userData'), 'soundfrog.json');
 
 const DEFAULTS = {
   sounds: [],
+  categories: [],
   pages: Array.from({ length: 9 }, () => Array(12).fill(null)),
   settings: {
     micDeviceId: '',
@@ -18,7 +19,38 @@ const DEFAULTS = {
     pageHotkeyPrefix: 'Control+Alt',
     stopAllHotkey: 'Control+Alt+Escape',
     hotkeysEnabled: true,
+
+    // Para onde cada disparo vai: 'both' | 'mic' | 'monitor'.
+    playTarget: 'both',
+
+    // Passagem de voz: manda seu microfone real para o mesmo cabo virtual,
+    // para o Discord ouvir voce E os sons. E o que o Soundpad resolve
+    // injetando no processo do app de voz.
+    passthrough: {
+      enabled: false,
+      deviceId: '',
+      gain: 1,
+      noiseSuppression: true,
+    },
+
+    tts: {
+      voice: '',
+      rate: 0,       // -10..10, escala do SAPI
+      volume: 100,   // 0..100
+    },
   },
+};
+
+// Campos que todo som carrega. Sons salvos antes destes existirem recebem os
+// defaults ao carregar, entao a biblioteca antiga continua valendo.
+const SOUND_DEFAULTS = {
+  volume: 1,
+  trimStart: 0,
+  trimEnd: 0,      // 0 = ate o fim
+  fadeIn: 0,
+  fadeOut: 0,
+  normalize: false,
+  category: '',
 };
 
 function deepMerge(base, override) {
@@ -50,6 +82,7 @@ function load() {
     const page = state.pages[p] ?? [];
     return Array.from({ length: slots }, (_, s) => page[s] ?? null);
   });
+  state.sounds = state.sounds.map((sound) => ({ ...SOUND_DEFAULTS, ...sound }));
   // Grava ja na primeira execucao: assim da pra abrir o JSON e editar os
   // atalhos sem precisar mexer em nada no app antes.
   if (!existed) save();
@@ -63,6 +96,7 @@ function save() {
 
 module.exports = {
   file: FILE,
+  SOUND_DEFAULTS,
   get: () => state,
   load,
   save,

@@ -20,6 +20,19 @@ O soundFrog usa o caminho previsível: **toca cada som em dois dispositivos de s
 
 Cada saída é um elemento `<audio>` próprio com `setSinkId()` apontando para o dispositivo escolhido. Nenhum processo externo é tocado.
 
+## O que ele faz
+
+- **Hotbar** de 9 páginas × 12 slots, com hotkeys globais `F1`–`F12`
+- **Saída dupla**: o mesmo som no microfone virtual e no seu fone
+- **Passagem de voz**: manda seu microfone real para o mesmo cabo, então o Discord ouve você *e* os sons — sem VoiceMeeter
+- **Destino por disparo**: ambos, só mic ou só fone (`Shift`+clique = prévia só no fone)
+- **Editor**: cortar início/fim, fade in/out, volume e normalização, com forma de onda
+- **Reprodução**: pausar, continuar e avançar dentro do som
+- **Biblioteca**: busca, categorias, import de arquivo ou pasta
+- **Auto-keys**: distribui os sons soltos pelos slots vazios de uma vez
+- **Gravação**: microfone ou áudio do sistema, com replay buffer dos últimos 30s
+- **Falar (TTS)**: digite e sua fala sai no microfone, usando as vozes do Windows
+
 ## Pré-requisito: um cabo de áudio virtual
 
 Instale **[VB-CABLE](https://vb-audio.com/Cable/)** (gratuito). Ele cria o par `CABLE Input` / `CABLE Output`.
@@ -30,7 +43,11 @@ Depois:
 2. Em **Você ouve em**, escolha seu fone.
 3. No Discord/OBS/jogo, defina o microfone como `CABLE Output`.
 
-> Com isso o app de voz ouve **só os sons**. Para que ele ouça sua voz junto, roteie seu microfone real para o `CABLE Input` também — pelo **VoiceMeeter**, ou pelo Windows em `Painel de Controle de Som → Gravação → seu microfone → Ouvir → Reproduzir neste dispositivo: CABLE Input`.
+4. Em **Sua voz**, escolha seu microfone real e ligue a **Passagem**. Agora o Discord ouve você e os sons pelo mesmo dispositivo.
+
+> Sem a passagem ligada, o app de voz ouve **só os sons**. A passagem substitui o VoiceMeeter: o soundFrog abre seu microfone e o reinjeta no cabo em tempo real.
+>
+> O cancelamento de eco fica desligado de propósito nessa passagem — ele compara a entrada com a saída padrão e tentaria cancelar os próprios sons do soundboard, deixando sua voz oca. Se precisar de supressão de ruído, ela continua ativa.
 
 ## Baixar
 
@@ -99,16 +116,23 @@ A biblioteca guarda **caminhos**, não cópias: se você mover ou apagar o arqui
 
 ```
 src/
-├─ main/           processo principal (Node)
-│  ├─ main.js      janela, bandeja, IPC, importação de arquivos
-│  ├─ hotkeys.js   atalhos globais
-│  └─ store.js     persistência em JSON
-├─ preload/        ponte segura (contextIsolation, sem Node na UI)
-└─ renderer/       interface
-   ├─ audio.js     motor de saída dupla  ← o núcleo
-   ├─ recorder.js  ring buffer PCM + encoder WAV
-   └─ app.js       biblioteca, hotbar, controles
+├─ main/              processo principal (Node)
+│  ├─ main.js         janela, bandeja, IPC, importação de arquivos
+│  ├─ hotkeys.js      atalhos globais
+│  ├─ tts.js          síntese de fala via SAPI do Windows
+│  └─ store.js        persistência em JSON
+├─ preload/           ponte segura (contextIsolation, sem Node na UI)
+└─ renderer/          interface
+   ├─ audio.js        motor Web Audio de saída dupla  ← o núcleo
+   ├─ passthrough.js  seu microfone real → cabo virtual
+   ├─ recorder.js     ring buffer PCM + encoder WAV
+   └─ app.js          biblioteca, hotbar, editor, controles
 ```
+
+Duas decisões que não são óbvias no código:
+
+- **Web Audio, não `<audio>`.** Trim e fade precisam de `AudioBufferSourceNode.start(when, offset, duration)` e de rampas num `GainNode`; elemento de mídia não dá esse controle.
+- **TTS pelo SAPI, não pela Web Speech API.** A API do Chromium toca sempre na saída padrão e ignora `setSinkId`, então a fala nunca chegaria ao cabo virtual. O SAPI gera um `.wav` que passa pelo motor normal.
 
 ## Limitações conhecidas
 
