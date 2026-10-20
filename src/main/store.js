@@ -20,8 +20,18 @@ const DEFAULTS = {
     stopAllHotkey: 'Control+Alt+Escape',
     hotkeysEnabled: true,
 
-    // Para onde cada disparo vai: 'both' | 'mic' | 'monitor'.
+    // Modo de reproducao, como no menu Reproduzir do Soundpad:
+    // 'both' = alto-falantes e microfone | 'mic' = so microfone
+    // 'monitor' = so alto-falantes
     playTarget: 'both',
+
+    // Modos de continuidade (menu Reproduzir)
+    repeatList: false,
+    repeatOne: false,
+    continueAfter: false,
+    autoStop: true,   // um disparo novo corta o anterior; o padrao do Soundpad
+
+    hotbarVisible: false,
 
     // Passagem de voz: manda seu microfone real para o mesmo cabo virtual,
     // para o Discord ouvir voce E os sons. E o que o Soundpad resolve
@@ -45,6 +55,8 @@ const DEFAULTS = {
 // defaults ao carregar, entao a biblioteca antiga continua valendo.
 const SOUND_DEFAULTS = {
   volume: 1,
+  playCount: 0,
+  duration: 0,   // em segundos, preenchido na primeira decodificacao
   trimStart: 0,
   trimEnd: 0,      // 0 = ate o fim
   fadeIn: 0,

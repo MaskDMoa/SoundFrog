@@ -239,6 +239,59 @@ ipcMain.handle('recording:save', (_e, { buffer, suggestedName }) => {
   return addPaths([file]);
 });
 
+// Estatistica de reproducao, como a coluna "Reproduzir contagem" do Soundpad.
+ipcMain.handle('sounds:played', (_e, { id, duration }) => {
+  const sound = store.get().sounds.find((s) => s.id === id);
+  if (!sound) return null;
+  sound.playCount = (sound.playCount ?? 0) + 1;
+  if (duration && !sound.duration) sound.duration = duration;
+  store.save();
+  return { playCount: sound.playCount, duration: sound.duration };
+});
+
+ipcMain.handle('sounds:setDuration', (_e, { id, duration }) => {
+  const sound = store.get().sounds.find((s) => s.id === id);
+  if (sound && duration && !sound.duration) {
+    sound.duration = duration;
+    store.save();
+  }
+  return null;
+});
+
+ipcMain.handle('stats:reset', () => {
+  for (const sound of store.get().sounds) sound.playCount = 0;
+  store.save();
+  return store.get();
+});
+
+// "Encontrar registros inoperantes": a biblioteca guarda caminhos, entao um
+// arquivo movido ou apagado vira uma entrada morta.
+ipcMain.handle('sounds:findDead', () => {
+  const dead = store.get().sounds
+    .filter((s) => !fs.existsSync(s.path))
+    .map((s) => s.id);
+  return dead;
+});
+
+ipcMain.handle('sounds:removeMany', (_e, ids) => {
+  const set = new Set(ids ?? []);
+  const state = store.get();
+  state.sounds = state.sounds.filter((s) => !set.has(s.id));
+  state.pages = state.pages.map((page) => page.map((slot) => (set.has(slot) ? null : slot)));
+  store.save();
+  return store.get();
+});
+
+ipcMain.handle('sounds:shuffle', () => {
+  const list = store.get().sounds;
+  for (let i = list.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [list[i], list[j]] = [list[j], list[i]];
+  }
+  store.save();
+  return store.get();
+});
+
 ipcMain.handle('categories:set', (_e, list) => {
   const state = store.get();
   state.categories = [...new Set((list ?? []).map((c) => String(c).slice(0, 60)).filter(Boolean))];

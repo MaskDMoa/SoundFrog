@@ -15,6 +15,7 @@ const buffers = new Map(); // path -> AudioBuffer (compartilhado entre contextos
 const peaks = new Map();   // path -> pico absoluto, para o normalizar
 const voices = new Set();
 const listeners = new Set();
+const endListeners = new Set();
 
 function notify() {
   for (const fn of listeners) fn(engine.playingCount, engine.current);
@@ -134,11 +135,14 @@ class Voice {
       this.startedAt = when;
     }
 
-    // O fim de qualquer uma das saidas encerra a voz inteira.
+    // O fim de qualquer uma das saidas encerra a voz inteira. So o fim
+    // natural avisa os ouvintes -- parar na mao nao encadeia o proximo.
     const [first] = this.parts;
     if (first) {
       first.source.onended = () => {
-        if (!this.paused) this.stop();
+        if (this.paused) return;
+        this.stop();
+        for (const fn of endListeners) fn(this);
       };
     }
   }
@@ -189,6 +193,11 @@ export const engine = {
 
   onChange(fn) {
     listeners.add(fn);
+  },
+
+  /** Avisado quando um som termina sozinho (nao quando e parado). */
+  onEnded(fn) {
+    endListeners.add(fn);
   },
 
   get playingCount() {

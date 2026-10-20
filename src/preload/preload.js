@@ -14,6 +14,13 @@ contextBridge.exposeInMainWorld('frog', {
 
   setCategories: (list) => ipcRenderer.invoke('categories:set', list),
 
+  played: (id, duration) => ipcRenderer.invoke('sounds:played', { id, duration }),
+  setDuration: (id, duration) => ipcRenderer.invoke('sounds:setDuration', { id, duration }),
+  resetStats: () => ipcRenderer.invoke('stats:reset'),
+  findDead: () => ipcRenderer.invoke('sounds:findDead'),
+  removeMany: (ids) => ipcRenderer.invoke('sounds:removeMany', ids),
+  shuffle: () => ipcRenderer.invoke('sounds:shuffle'),
+
   assignSlot: (page, slot, soundId) => ipcRenderer.invoke('pages:assign', { page, slot, soundId }),
   autoAssign: () => ipcRenderer.invoke('pages:autoAssign'),
   clearPage: (page) => ipcRenderer.invoke('pages:clearPage', page),

@@ -3,120 +3,120 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy"
-      content="default-src 'self'; media-src 'self' file:; img-src 'self' file: data:; style-src 'self'; script-src 'self'; connect-src 'self' file:">
+      content="default-src 'self'; media-src 'self' file:; img-src 'self' file: data:; style-src 'self'; script-src 'self'">
 <title>soundFrog</title>
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="layout.css">
 </head>
 <body>
 
 <div class="titlebar">
   <img class="logo" src="../../assets/icon.png" alt="">
   <span class="wordmark">sound<b>Frog</b></span>
-  <span class="tagline">soundboard</span>
+
+  <nav class="menubar" id="menubar">
+    <button type="button" data-menu="arquivo">Arquivo</button>
+    <button type="button" data-menu="editar">Editar</button>
+    <button type="button" data-menu="reproduzir">Reproduzir</button>
+    <button type="button" data-menu="janela">Janela</button>
+  </nav>
 </div>
 
-<header class="toolbar">
-  <div class="card">
-    <span class="card-title">Roteamento</span>
-    <div class="fields">
-      <label>
-        <span>Vai pro microfone</span>
-        <div class="select"><select id="micOut"></select></div>
-      </label>
-      <label>
-        <span>Voc&ecirc; ouve em</span>
-        <div class="select"><select id="monitorOut"></select></div>
-      </label>
-    </div>
+<div class="menupop hidden" id="menupop"></div>
+
+<!-- Barra de transporte, espelhando a do Soundpad -->
+<header class="transport">
+  <div class="tgroup">
+    <button id="tPlay" class="tbtn" type="button" title="Reproduzir (alto-falantes e microfone)">&#9654;</button>
+    <button id="tPlaySpk" class="tbtn" type="button" title="Reproduzir apenas nos alto-falantes">&#127911;</button>
+    <button id="tPlayMic" class="tbtn" type="button" title="Reproduzir apenas no microfone">&#127908;</button>
+    <button id="tPause" class="tbtn" type="button" title="Pausar / retomar">&#10073;&#10073;</button>
+    <button id="tStop" class="tbtn" type="button" title="Parar">&#9632;</button>
+    <button id="tPrev" class="tbtn" type="button" title="Anterior">&#9198;</button>
+    <button id="tNext" class="tbtn" type="button" title="Pr&oacute;ximo">&#9197;</button>
+    <button id="tRandom" class="tbtn" type="button" title="Reproduzir um aleat&oacute;rio">&#127922;</button>
   </div>
 
-  <div class="card">
-    <span class="card-title">Sua voz</span>
-    <div class="fields">
-      <label>
-        <span>Microfone real</span>
-        <div class="select"><select id="passDevice"></select></div>
-      </label>
-      <label class="narrow">
-        <span>Ganho <output id="passGainVal">100%</output></span>
-        <input id="passGain" type="range" min="0" max="200" value="100">
-      </label>
-      <label class="stacked">
-        <span>&nbsp;</span>
-        <button id="passToggle" class="pill" type="button">
-          <span class="dot"></span><span class="pill-text">Passagem off</span>
-        </button>
-      </label>
-    </div>
+  <span id="tTime" class="tnum">0:00</span>
+  <input id="seek" type="range" min="0" max="1000" value="0" title="Avan&ccedil;ar no som">
+  <span id="tDur" class="tnum">0:00</span>
+
+  <div class="tgroup modes">
+    <button id="mRepeatList" class="tbtn" type="button" title="Repetir a lista">&#128257;</button>
+    <button id="mRepeatOne" class="tbtn" type="button" title="Repetir o arquivo atual">&#128258;</button>
+    <button id="mContinue" class="tbtn" type="button" title="Continuar a reprodu&ccedil;&atilde;o ap&oacute;s o arquivo atual">&#9193;</button>
+    <button id="mAutoStop" class="tbtn" type="button" title="Interrup&ccedil;&atilde;o autom&aacute;tica: um disparo novo corta o anterior">&#9199;</button>
   </div>
 
-  <div class="card">
-    <span class="card-title">Sa&iacute;da e volume</span>
-    <div class="fields">
-      <label class="auto">
-        <span>Destino</span>
-        <div class="segmented" id="target">
-          <button type="button" data-value="both">Ambos</button>
-          <button type="button" data-value="mic">S&oacute; mic</button>
-          <button type="button" data-value="monitor">S&oacute; fone</button>
-        </div>
-      </label>
-      <label class="narrow">
-        <span>Geral <output id="masterVal">80%</output></span>
-        <input id="master" type="range" min="0" max="100" value="80">
-      </label>
-      <label class="narrow">
-        <span>Seu fone <output id="monitorVal">80%</output></span>
-        <input id="monitorVol" type="range" min="0" max="100" value="80">
-      </label>
-    </div>
-  </div>
+  <span class="tsep"></span>
 
-  <div class="card-actions">
+  <label class="tvol" title="Volume geral">&#127911;
+    <input id="master" type="range" min="0" max="100" value="80">
+    <output id="masterVal">80%</output>
+  </label>
+
+  <div class="tgroup right">
+    <button id="hotbarToggle" class="tbtn wide" type="button" title="Mostrar / ocultar a barra principal">Barra principal</button>
     <button id="hotkeyToggle" class="pill" type="button">
-      <span class="dot"></span><span class="pill-text">Hotkeys ativas</span>
+      <span class="dot"></span><span class="pill-text">Hotkeys</span>
     </button>
     <button id="stopAll" class="stop" type="button">Parar tudo</button>
   </div>
 </header>
 
 <main>
-  <aside class="library">
-    <div class="library-head">
-      <div class="search">
-        <input id="search" type="search" placeholder="Buscar som..." autocomplete="off">
-      </div>
-      <div id="cats" class="cats"></div>
-      <div class="row">
-        <button id="addFiles" type="button">Arquivos</button>
-        <button id="addFolder" type="button">Pasta</button>
-      </div>
+  <!-- Arvore de categorias -->
+  <aside class="cats-pane">
+    <div class="pane-head">
+      <span>Categoria</span><span class="hash">#</span>
     </div>
-    <ul id="list" class="list"></ul>
-    <p class="hint">Arraste at&eacute; um slot. Clique no nome para tocar, na engrenagem para editar.</p>
+    <ul id="catTree" class="cat-tree"></ul>
+    <div class="pane-foot">
+      <button id="addCat" type="button" title="Criar categoria">+ Categoria</button>
+    </div>
   </aside>
 
-  <section class="board">
-    <nav class="board-head">
-      <div id="pages" class="pages"></div>
-      <button id="autoKeys" type="button" title="Preenche os slots vazios com os sons que ainda nao estao em nenhuma pagina">Auto-keys</button>
-      <button id="clearPage" type="button" title="Esvazia a pagina atual">Limpar p&aacute;gina</button>
-    </nav>
+  <!-- Lista de sons, o centro do app -->
+  <section class="listing">
+    <div class="listing-head">
+      <input id="search" type="search" placeholder="Pesquisar (Ctrl+F)..." autocomplete="off">
+      <button id="addFiles" type="button">+ Arquivos</button>
+      <button id="addFolder" type="button">+ Pasta</button>
+    </div>
 
-    <div id="grid" class="grid"></div>
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="c-idx">&Iacute;ndice</th>
+            <th class="c-name" data-sort="name">Identificador</th>
+            <th class="c-cat" data-sort="category">Categoria</th>
+            <th class="c-dur" data-sort="duration">Dura&ccedil;&atilde;o</th>
+            <th class="c-count" data-sort="playCount" title="Contagem de reprodu&ccedil;&otilde;es">&#9654;</th>
+            <th class="c-key">Teclas de atalho</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <p id="listEmpty" class="list-empty"></p>
+    </div>
 
-    <div class="nowplaying" id="nowplaying" data-has="false">
-      <button id="playPause" type="button" class="icon" title="Pausar / continuar">&#9208;</button>
-      <span id="npName" class="np-name">nada tocando</span>
-      <span id="npTime" class="np-time">0:00</span>
-      <input id="seek" type="range" min="0" max="1000" value="0" title="Avan&ccedil;ar no som">
-      <span id="npDur" class="np-time">0:00</span>
+    <!-- Barra principal (o hotbar), oculta por padrao como no Soundpad -->
+    <div class="hotbar hidden" id="hotbar">
+      <div class="hotbar-head">
+        <div id="pages" class="pages"></div>
+        <button id="autoKeys" type="button" title="Preenche os slots vazios com os sons sem atalho">Auto-keys</button>
+        <button id="clearPage" type="button">Limpar p&aacute;gina</button>
+      </div>
+      <div id="grid" class="grid"></div>
     </div>
 
     <div class="panel">
       <div class="panel-tabs">
-        <button type="button" data-tab="rec" class="on">Gravar</button>
-        <button type="button" data-tab="tts">Falar</button>
+        <button type="button" data-tab="rec" class="on">Gravador</button>
+        <button type="button" data-tab="tts">Texto em fala</button>
+        <button type="button" data-tab="voice">Sua voz</button>
+        <button type="button" data-tab="dev">Dispositivos</button>
       </div>
 
       <div class="panel-body" data-tab="rec">
@@ -137,8 +137,28 @@
         <div class="select compact"><select id="ttsVoice"></select></div>
         <label class="inline">vel. <input id="ttsRate" type="range" min="-10" max="10" value="0"></label>
         <button id="ttsSpeak" type="button">Falar</button>
-        <button id="ttsSave" type="button" title="Guarda a fala como um som na biblioteca">Salvar</button>
+        <button id="ttsSave" type="button">Salvar na lista</button>
         <span id="ttsStatus" class="status"></span>
+      </div>
+
+      <div class="panel-body hidden" data-tab="voice">
+        <label class="inline">Microfone real</label>
+        <div class="select compact"><select id="passDevice"></select></div>
+        <label class="inline">ganho <input id="passGain" type="range" min="0" max="200" value="100">
+          <output id="passGainVal">100%</output></label>
+        <button id="passToggle" class="pill" type="button">
+          <span class="dot"></span><span class="pill-text">Passagem off</span>
+        </button>
+        <span class="status">Liga sua voz no mesmo cabo dos sons.</span>
+      </div>
+
+      <div class="panel-body hidden" data-tab="dev">
+        <label class="inline">Vai pro microfone</label>
+        <div class="select compact"><select id="micOut"></select></div>
+        <label class="inline">Voc&ecirc; ouve em</label>
+        <div class="select compact"><select id="monitorOut"></select></div>
+        <label class="inline">fone <input id="monitorVol" type="range" min="0" max="100" value="80">
+          <output id="monitorVal">80%</output></label>
       </div>
     </div>
   </section>
@@ -150,15 +170,12 @@
     </div>
     <div class="editor-body">
       <label class="full"><span>Nome</span><input id="edName" type="text" maxlength="120"></label>
-
       <label class="full"><span>Categoria</span>
         <input id="edCategory" type="text" list="catList" maxlength="60" placeholder="sem categoria">
         <datalist id="catList"></datalist>
       </label>
 
-      <div class="wave-wrap">
-        <canvas id="edWave" width="520" height="92"></canvas>
-      </div>
+      <div class="wave-wrap"><canvas id="edWave" width="520" height="92"></canvas></div>
 
       <div class="pair">
         <label><span>In&iacute;cio <output id="edStartVal">0,00s</output></span>
@@ -166,17 +183,14 @@
         <label><span>Fim <output id="edEndVal">fim</output></span>
           <input id="edEnd" type="range" min="0" max="1000" value="1000"></label>
       </div>
-
       <div class="pair">
         <label><span>Fade in <output id="edFadeInVal">0,0s</output></span>
           <input id="edFadeIn" type="range" min="0" max="50" value="0"></label>
         <label><span>Fade out <output id="edFadeOutVal">0,0s</output></span>
           <input id="edFadeOut" type="range" min="0" max="50" value="0"></label>
       </div>
-
       <label class="full"><span>Volume <output id="edVolVal">100%</output></span>
         <input id="edVol" type="range" min="0" max="200" value="100"></label>
-
       <label class="check"><input id="edNorm" type="checkbox">
         <span>Normalizar (iguala o pico com os outros sons)</span></label>
 
@@ -190,6 +204,10 @@
 </main>
 
 <footer class="statusbar">
+  <span id="sbCat" class="sb-strong">Todos os sons</span>
+  <span>Sons: <b id="sbCount">0</b></span>
+  <span>Selecionado: <b id="sbSel">0</b></span>
+  <span>Reproduzidos: <b id="sbPlays">0</b></span>
   <span class="meter"><i></i><span id="playing">nada tocando</span></span>
   <span id="devInfo"></span>
   <button id="openData" class="link" type="button">pasta de dados</button>
