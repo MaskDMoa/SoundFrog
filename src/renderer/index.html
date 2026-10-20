@@ -80,6 +80,41 @@
   <button id="setupDismiss" type="button" class="setup-x" title="Dispensar">&times;</button>
 </div>
 
+<!-- Autorizacao da instalacao do driver. Instalar driver mexe no sistema:
+     a pessoa precisa saber exatamente o que vai acontecer antes de aceitar. -->
+<div class="modal hidden" id="cableModal">
+  <div class="modal-card" role="dialog" aria-labelledby="cableTitle" aria-modal="true">
+    <img class="modal-logo" src="../../assets/icon.png" alt="">
+    <h2 id="cableTitle">Autorizar a instala&ccedil;&atilde;o do cabo de &aacute;udio</h2>
+
+    <p class="modal-lead">Para o som sair no Discord, o Windows precisa de um microfone
+      virtual. Sem ele, o soundFrog toca apenas no seu fone.</p>
+
+    <div class="modal-steps" id="cableSteps">
+      <div class="step"><span class="n">1</span>
+        <div><b>O instalador da VB-Audio abre</b>
+          <small>Uma janela chamada "VB-CABLE Driver Setup". Clique em <b>Install Driver</b>.</small></div></div>
+      <div class="step"><span class="n">2</span>
+        <div><b>O Windows pede permiss&atilde;o</b>
+          <small>Instalar driver exige administrador. Confirme o aviso.</small></div></div>
+      <div class="step"><span class="n">3</span>
+        <div><b>Reinicie o computador</b>
+          <small>S&oacute; depois do reinício o Windows reconhece o dispositivo.</small></div></div>
+    </div>
+
+    <p class="modal-state hidden" id="cableState"></p>
+
+    <p class="modal-credit">VB-CABLE &eacute; da <b>VB-Audio Software</b>, inclu&iacute;do sem
+      modifica&ccedil;&otilde;es com autoriza&ccedil;&atilde;o do autor. &Eacute; donationware &mdash;
+      <button id="cableDonate" type="button" class="linkish">considere doar</button>.</p>
+
+    <div class="modal-actions">
+      <button id="cableLater" type="button">Agora n&atilde;o</button>
+      <button id="cableGo" type="button" class="setup-cta">Autorizar e instalar</button>
+    </div>
+  </div>
+</div>
+
 <main>
   <!-- Arvore de categorias -->
   <aside class="cats-pane">
@@ -175,6 +210,10 @@
         <div class="select compact"><select id="monitorOut"></select></div>
         <label class="inline">fone <input id="monitorVol" type="range" min="0" max="100" value="80">
           <output id="monitorVal">80%</output></label>
+        <span class="divider"></span>
+        <button id="testTone" type="button" title="Toca um bipe nas duas saidas para conferir o caminho do audio">Testar som</button>
+        <button id="cableOpen" type="button">Instalar cabo</button>
+        <span id="devStatus" class="status"></span>
       </div>
     </div>
   </section>

@@ -21,6 +21,11 @@ function vendorFile(name) {
 
 const packagePath = () => vendorFile(PACK);
 
+// Trava de concorrência: dois cliques seguidos chegavam a rodar o instalador
+// duas vezes, e o Windows criava um segundo nó de dispositivo que não sobe
+// (código 10). Uma instalação por vez.
+let running = null;
+
 /**
  * Dispara o instalador oficial da VB-Audio.
  *
@@ -29,6 +34,8 @@ const packagePath = () => vendorFile(PACK);
  * Resolve quando o processo termina; o usuário ainda precisa reiniciar.
  */
 function install() {
+  if (running) return running;
+
   const zip = packagePath();
   const script = vendorFile('install-vbcable.ps1');
 
@@ -36,7 +43,7 @@ function install() {
     throw new Error('O pacote do VB-CABLE nao veio junto nesta instalacao.');
   }
 
-  return new Promise((resolve, reject) => {
+  running = new Promise((resolve, reject) => {
     execFile(
       'powershell.exe',
       ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', script, '-Zip', zip],
@@ -52,7 +59,9 @@ function install() {
         }
       },
     );
-  });
+  }).finally(() => { running = null; });
+
+  return running;
 }
 
 module.exports = { install, packagePath, PACK };

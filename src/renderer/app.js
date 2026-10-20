@@ -752,6 +752,47 @@ const ACTIONS = {
   openDataFolder: () => frog.openDataFolder(),
 };
 
+/* ======================================================= cabo virtual ==== */
+
+function openCableModal() {
+  $('cableModal').classList.remove('hidden');
+  $('cableState').classList.add('hidden');
+  $('cableSteps').classList.remove('hidden');
+  $('cableGo').disabled = false;
+  $('cableGo').textContent = 'Autorizar e instalar';
+}
+
+function closeCableModal() {
+  $('cableModal').classList.add('hidden');
+}
+
+async function runCableInstall() {
+  const go = $('cableGo');
+  const info = $('cableState');
+
+  go.disabled = true;
+  go.textContent = 'Instalando...';
+  $('cableSteps').classList.add('hidden');
+  info.classList.remove('hidden');
+  info.className = 'modal-state';
+  info.textContent = 'Confirme na janela do Windows e clique em "Install Driver".';
+
+  try {
+    await frog.installCable();
+    info.className = 'modal-state ok';
+    info.innerHTML = '<b>Cabo instalado.</b> Reinicie o computador; ao voltar, o soundFrog '
+      + 'escolhe o CABLE Input sozinho. Depois use "Testar som" para conferir.';
+    go.textContent = 'Pronto';
+    $('cableLater').textContent = 'Fechar';
+  } catch (err) {
+    info.className = 'modal-state bad';
+    info.textContent = err.message;
+    go.disabled = false;
+    go.textContent = 'Tentar de novo';
+    $('cableSteps').classList.remove('hidden');
+  }
+}
+
 /* ============================================================= setup ===== */
 
 function syncModes() {
@@ -930,23 +971,23 @@ function wireControls() {
 
   $('setupDonate').addEventListener('click', () =>
     frog.openExternal('https://vb-audio.com/Services/licensing.htm'));
+  $('cableDonate').addEventListener('click', () =>
+    frog.openExternal('https://vb-audio.com/Services/licensing.htm'));
 
-  $('setupInstall').addEventListener('click', async () => {
-    const button = $('setupInstall');
-    const msg = $('setupMsg');
-    button.disabled = true;
-    button.textContent = 'Instalando...';
-    msg.textContent = 'Confirme na janela do Windows. O instalador e da propria VB-Audio.';
-    try {
-      await frog.installCable();
-      msg.innerHTML = '<b>Cabo instalado.</b> Reinicie o computador para o Windows '
-        + 'reconhecer o dispositivo; depois o soundFrog o encontra sozinho.';
-      button.textContent = 'Pronto';
-    } catch (err) {
-      msg.textContent = err.message;
-      button.disabled = false;
-      button.textContent = 'Tentar de novo';
-    }
+  $('setupInstall').addEventListener('click', openCableModal);
+  $('cableOpen').addEventListener('click', openCableModal);
+  $('cableLater').addEventListener('click', closeCableModal);
+  $('cableGo').addEventListener('click', runCableInstall);
+
+  $('cableModal').addEventListener('click', (event) => {
+    if (event.target.id === 'cableModal') closeCableModal();
+  });
+
+  $('testTone').addEventListener('click', async () => {
+    const heard = await engine.testTone(state.settings);
+    $('devStatus').textContent = heard.length
+      ? `Bipe enviado para ${heard.length} saida(s). Ouviu no fone?`
+      : 'Nenhuma saida configurada.';
   });
 
   $('setupDismiss').addEventListener('click', () => {
@@ -1017,4 +1058,23 @@ async function boot() {
   await loadVoices();
 }
 
-boot();
+// Um erro no boot deixava o app meio montado em silencio: selects vazios e
+// nenhuma pista do motivo. Agora a falha aparece na barra de status.
+function fatal(where, err) {
+  console.error(`[soundFrog] ${where}:`, err);
+  const bar = document.querySelector('.statusbar');
+  if (!bar) return;
+  let slot = document.getElementById('bootError');
+  if (!slot) {
+    slot = document.createElement('span');
+    slot.id = 'bootError';
+    slot.className = 'boot-error';
+    bar.prepend(slot);
+  }
+  slot.textContent = `Falha em ${where}: ${err.message}`;
+}
+
+window.addEventListener('error', (event) => fatal('execucao', event.error ?? event));
+window.addEventListener('unhandledrejection', (event) => fatal('promessa', event.reason ?? {}));
+
+boot().catch((err) => fatal('inicializacao', err));

@@ -254,6 +254,41 @@ export const engine = {
     notify();
   },
 
+  /**
+   * Bipe sintetizado nas saidas ativas, para conferir o caminho do audio sem
+   * depender de nenhum arquivo. Devolve para onde saiu.
+   */
+  async testTone(settings) {
+    const outputs = await this.outputsFor(settings);
+    if (!outputs.length) return [];
+
+    const heard = [];
+    for (const { ctx, gain } of outputs) {
+      const osc = ctx.createOscillator();
+      const env = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = 660;
+
+      const now = ctx.currentTime + 0.02;
+      const level = Math.min(0.35, gain * 0.35);
+      env.gain.setValueAtTime(0.0001, now);
+      env.gain.exponentialRampToValueAtTime(level, now + 0.03);
+      env.gain.setValueAtTime(level, now + 0.42);
+      env.gain.exponentialRampToValueAtTime(0.0001, now + 0.55);
+
+      osc.connect(env);
+      env.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.6);
+      osc.onended = () => {
+        osc.disconnect();
+        env.disconnect();
+      };
+      heard.push(ctx.sinkId || 'padrao');
+    }
+    return heard;
+  },
+
   /** Esquece o buffer de um arquivo (usar quando o som sai da biblioteca). */
   forget(path) {
     buffers.delete(path);
