@@ -32,9 +32,13 @@ Depois:
 
 > Com isso o app de voz ouve **só os sons**. Para que ele ouça sua voz junto, roteie seu microfone real para o `CABLE Input` também — pelo **VoiceMeeter**, ou pelo Windows em `Painel de Controle de Som → Gravação → seu microfone → Ouvir → Reproduzir neste dispositivo: CABLE Input`.
 
-## Instalação
+## Baixar
 
-Baixe o instalador na aba [Releases](../../releases) e rode. Ou compile:
+Vá em **[Releases](../../releases)**, abra a versão mais recente e baixe o `soundFrog-Setup-X.Y.Z.exe` em *Assets*. Rode o arquivo e pronto.
+
+> O instalador não é assinado digitalmente (um certificado de code signing custa a partir de ~US$ 200/ano). O Windows vai mostrar o aviso **"O Windows protegeu o computador"** — clique em *Mais informações* → *Executar assim mesmo*. Isso vale para quem baixar seu app também, então avise na descrição da release.
+
+## Compilar você mesmo
 
 ```bash
 npm install
@@ -42,7 +46,21 @@ npm start        # roda em modo dev
 npm run dist     # gera o instalador em dist/
 ```
 
-Requer Node.js 18+.
+Requer Node.js 18+. O instalador sai em `dist/soundFrog-Setup-<versão>.exe`.
+
+## Publicar uma nova versão
+
+O [workflow de release](.github/workflows/release.yml) compila no Windows e publica sozinho. Basta marcar a versão:
+
+```bash
+# 1. suba a versão no package.json (0.1.0 -> 0.2.0)
+npm version minor -m "chore: versao %s"
+
+# 2. empurre o commit e a tag
+git push origin main --follow-tags
+```
+
+A tag `v*` dispara o build; em poucos minutos a Release aparece com o `.exe` anexado. Para republicar sem mexer na versão, rode o workflow manualmente em *Actions → Release → Run workflow*.
 
 ## Uso
 
