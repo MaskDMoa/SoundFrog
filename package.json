@@ -35,7 +35,8 @@
           ]
         }
       ],
-      "icon": "assets/icon.ico"
+      "icon": "assets/icon.ico",
+      "publisherName": "soundFrog"
     },
     "nsis": {
       "artifactName": "${productName}-Setup-${version}.${ext}",
@@ -55,7 +56,14 @@
       "uninstallDisplayName": "soundFrog ${version}",
       "runAfterFinish": true,
       "deleteAppDataOnUninstall": false,
-      "include": "build/installer.nsh"
+      "include": "build/installer.nsh",
+      "installerLanguages": [
+        "pt_BR"
+      ],
+      "multiLanguageInstaller": true,
+      "displayLanguageSelector": false,
+      "menuCategory": false,
+      "allowElevation": true
     },
     "extraResources": [
       {
@@ -66,6 +74,7 @@
           "**/*.ps1"
         ]
       }
-    ]
+    ],
+    "copyright": "Copyright (c) 2026 aleat. VB-CABLE (c) VB-Audio Software."
   }
 }
