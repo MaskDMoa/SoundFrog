@@ -1,6 +1,6 @@
 {
   "name": "soundfrog",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Soundboard para Windows: toca seus sons no microfone e no fone ao mesmo tempo, com hotkeys globais, hotbar de 9 paginas e gravacao de mic/sistema.",
   "main": "src/main/main.js",
   "author": "aleat",
