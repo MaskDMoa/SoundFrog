@@ -172,3 +172,25 @@ input[type="range"]::-webkit-slider-thumb {
 }
 input[type="range"]:hover::-webkit-slider-thumb { box-shadow: 0 0 0 5px rgba(142, 208, 50, 0.2); }
 
+/* ============================================================= icons ===== */
+
+.svg-icon {
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  vertical-align: middle;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+  transition: transform 120ms ease, stroke 120ms ease, fill 120ms ease;
+}
+
+.svg-icon.fill-current {
+  fill: currentColor;
+  stroke: none;
+}
+
+

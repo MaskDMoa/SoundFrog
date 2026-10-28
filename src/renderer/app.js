@@ -2,6 +2,7 @@ import { engine } from './audio.js';
 import { Recorder } from './recorder.js';
 import { passthrough } from './passthrough.js';
 import { MENUS } from './menus.js';
+import { ICONS } from './icons.js';
 
 const frog = window.frog;
 const $ = (id) => document.getElementById(id);
@@ -141,10 +142,10 @@ function renderCategories() {
     tree.append(li);
   };
 
-  row('', 'Todos os sons', state.sounds.length, '\u{1F50A}');
+  row('', 'Todos os sons', state.sounds.length, ICONS.library);
   const loose = counts.get('') ?? 0;
-  if (loose) row('\u0000', 'Sem categoria', loose, '\u{1F4C2}');
-  for (const name of names) row(name, name, counts.get(name) ?? 0, '\u{1F4C1}');
+  if (loose) row('\u0000', 'Sem categoria', loose, ICONS.folderOpen);
+  for (const name of names) row(name, name, counts.get(name) ?? 0, ICONS.folder);
 
   $('catList').innerHTML = names.map((c) => `<option value="${escapeHtml(c)}">`).join('');
 }
@@ -318,12 +319,17 @@ function onVoiceEnded(voice) {
 }
 
 let seeking = false;
+let lastPauseState = null;
 
 function renderTransport() {
   const voice = engine.current;
   $('tTime').textContent = fmtTime(voice ? voice.position : 0);
   $('tDur').textContent = fmtTime(voice ? voice.duration : 0);
-  $('tPause').textContent = voice && voice.paused ? '▶' : '❙❙';
+  const isPaused = Boolean(voice && voice.paused);
+  if (lastPauseState !== isPaused) {
+    lastPauseState = isPaused;
+    $('tPause').innerHTML = isPaused ? ICONS.play : ICONS.pause;
+  }
   if (!seeking) $('seek').value = voice ? Math.round((voice.position / voice.duration) * 1000) : 0;
 }
 
@@ -635,7 +641,7 @@ function openMenu(name, anchor) {
     row.className = 'mitem';
     const checked = item.check ? item.check(state) : null;
     row.innerHTML = `
-      <span class="mcheck">${checked === true ? '✓' : ''}</span>
+      <span class="mcheck">${checked === true ? ICONS.check : ''}</span>
       <span class="mlabel">${escapeHtml(item.label)}</span>
       <span class="maccel">${escapeHtml(item.accel ?? '')}</span>`;
     row.addEventListener('click', async () => {
