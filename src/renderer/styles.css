@@ -1,26 +1,26 @@
 /* soundFrog — tema proprio. Verde de sapo sobre um fundo de brejo noturno. */
 
 :root {
-  --ink:        #0c110a;
-  --ink-2:      #121a0f;
-  --surface:    #18220f;
-  --surface-2:  #1f2b14;
-  --raised:     #26331a;
-  --line:       #2c3a1e;
-  --line-soft:  #223018;
+  --ink:        #10150f;
+  --ink-2:      #171e15;
+  --surface:    #20291d;
+  --surface-2:  #293522;
+  --raised:     #303d27;
+  --line:       #3b4930;
+  --line-soft:  #2b3725;
 
   --text:       #e9f0e0;
-  --muted:      #8d9c7c;
-  --faint:      #5e6d50;
+  --muted:      #a0aa8d;
+  --faint:      #707c61;
 
-  --frog:       #8ed032;
-  --frog-deep:  #5c9018;
-  --frog-glow:  rgba(142, 208, 50, 0.22);
+  --frog:       #a3bd55;
+  --frog-deep:  #6f8736;
+  --frog-glow:  rgba(163, 189, 85, 0.18);
   --stop:       #e0533a;
 
-  --r-sm: 8px;
-  --r-md: 12px;
-  --r-lg: 16px;
+  --r-sm: 4px;
+  --r-md: 6px;
+  --r-lg: 8px;
 
   --title-h: 40px;
 }
@@ -36,8 +36,10 @@ body {
   display: flex;
   flex-direction: column;
   background:
-    radial-gradient(1100px 520px at 18% -12%, rgba(142, 208, 50, 0.10), transparent 62%),
-    radial-gradient(760px 420px at 100% 110%, rgba(60, 130, 40, 0.09), transparent 60%),
+    url("../../assets/swamp-lineart.svg") center bottom / min(100%, 1200px) auto no-repeat,
+    radial-gradient(ellipse 62% 38% at 50% 84%, rgba(74, 91, 61, 0.2), transparent 100%),
+    radial-gradient(1100px 520px at 18% -12%, rgba(163, 189, 85, 0.08), transparent 62%),
+    radial-gradient(760px 420px at 100% 110%, rgba(83, 112, 61, 0.09), transparent 60%),
     var(--ink);
   color: var(--text);
   font: 13.5px/1.45 "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;

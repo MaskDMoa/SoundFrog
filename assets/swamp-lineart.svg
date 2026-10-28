@@ -1,0 +1,282 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 800" preserveAspectRatio="xMidYMax slice">
+  <defs>
+    <!-- Atmosfera, névoa e dissolução suave das bordas. -->
+    <radialGradient id="ambiente" cx="50%" cy="47%" r="72%">
+      <stop offset="0" stop-color="#2f4a32" stop-opacity=".2"/>
+      <stop offset=".65" stop-color="#1a2f23" stop-opacity=".13"/>
+      <stop offset="1" stop-color="#0d1a14" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="nevoa" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#3a5a6a" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#3a5a6a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="luz-canto" cx="12%" cy="8%" r="68%">
+      <stop offset="0" stop-color="#a8c05a" stop-opacity=".12"/>
+      <stop offset=".42" stop-color="#6b8e3a" stop-opacity=".06"/>
+      <stop offset="1" stop-color="#6b8e3a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="fade-laterais" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#000"/><stop offset=".08" stop-color="#fff"/>
+      <stop offset=".92" stop-color="#fff"/><stop offset="1" stop-color="#000"/>
+    </linearGradient>
+    <linearGradient id="fade-topo" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#000"/><stop offset=".2" stop-color="#fff"/><stop offset="1" stop-color="#fff"/>
+    </linearGradient>
+    <linearGradient id="margem-distante" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1a2f23" stop-opacity=".36"/>
+      <stop offset=".55" stop-color="#1a2f23" stop-opacity=".2"/>
+      <stop offset="1" stop-color="#1a2f23" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="faixa-nevoa-1" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#3a5a6a" stop-opacity="0"/><stop offset=".2" stop-color="#3a5a6a" stop-opacity=".12"/>
+      <stop offset=".52" stop-color="#3a5a6a" stop-opacity=".2"/><stop offset=".82" stop-color="#3a5a6a" stop-opacity=".1"/>
+      <stop offset="1" stop-color="#3a5a6a" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="faixa-nevoa-2" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#6b8e3a" stop-opacity="0"/><stop offset=".18" stop-color="#6b8e3a" stop-opacity=".06"/>
+      <stop offset=".48" stop-color="#3a5a6a" stop-opacity=".16"/><stop offset=".78" stop-color="#3a5a6a" stop-opacity=".1"/>
+      <stop offset="1" stop-color="#3a5a6a" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="agua-gradiente" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a5a6a" stop-opacity="0"/><stop offset=".12" stop-color="#3a5a6a" stop-opacity=".19"/>
+      <stop offset=".35" stop-color="#3a5a6a" stop-opacity=".2"/><stop offset="1" stop-color="#1a2f23" stop-opacity=".44"/>
+    </linearGradient>
+    <linearGradient id="agua-borda" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a5a6a" stop-opacity="0"/><stop offset=".18" stop-color="#3a5a6a" stop-opacity=".16"/>
+      <stop offset="1" stop-color="#3a5a6a" stop-opacity="0"/>
+    </linearGradient>    <linearGradient id="terra" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#2f4a32"/><stop offset="1" stop-color="#1a2f23"/>
+    </linearGradient>
+    <filter id="desfoque-nevoa" x="-30%" y="-50%" width="160%" height="200%"><feGaussianBlur stdDeviation="34"/></filter>
+    <mask id="dissolve-laterais" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="800">
+      <rect width="1600" height="800" fill="url(#fade-laterais)"/>
+    </mask>
+    <linearGradient id="fade-juncos" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#000"/><stop offset=".03" stop-color="#fff"/>
+      <stop offset=".97" stop-color="#fff"/><stop offset="1" stop-color="#000"/>
+    </linearGradient>
+    <mask id="dissolve-juncos" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="800">
+      <rect width="1600" height="800" fill="url(#fade-juncos)"/>
+    </mask>    <mask id="dissolve-topo" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="800">
+      <rect width="1600" height="800" fill="url(#fade-topo)"/>
+    </mask>
+
+    <!-- Duas folhas elípticas com recorte em V e nervuras discretas. -->
+    <symbol id="folha-vitoria-a" viewBox="0 0 120 70">
+      <path d="M60 38 57 7C40 9 19 20 8 37 18 55 37 63 60 62 83 63 102 55 112 37 101 20 80 9 63 7Z" fill="#2f4a32" stroke="#3f5a45" stroke-width="2.6" stroke-linejoin="round"/>
+      <path d="M60 38 57 7M60 39 25 29m35 10 35-10" fill="none" stroke="#6b8e3a" stroke-width="1.6" stroke-linecap="round" opacity=".52"/>
+    </symbol>
+    <symbol id="folha-vitoria-b" viewBox="0 0 120 70">
+      <path d="M60 39 66 8C45 5 23 17 9 36c9 20 28 29 51 28 23 1 42-8 51-28C97 18 80 9 66 8Z" fill="#1a2f23" stroke="#3f5a45" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M60 39 66 8M60 40 27 28m33 12 34-13" fill="none" stroke="#6b8e3a" stroke-width="1.5" stroke-linecap="round" opacity=".45"/>
+    </symbol>
+
+    <!-- Três símbolos reutilizáveis de junco, com hastes e folhas curvas. -->
+    <symbol id="junco-a" viewBox="0 0 100 220">
+      <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M50 220C43 163 56 100 48 26" fill="none" stroke-width="3.4"/>
+        <path d="M48 167C32 151 21 130 17 106Q38 119 48 155Z" fill="currentColor" fill-opacity=".35" stroke-width="2.3"/>
+        <path d="M50 145C66 125 75 105 77 81Q57 99 50 137Z" fill="currentColor" fill-opacity=".35" stroke-width="2.3"/>
+        <path d="M49 119C34 101 27 81 29 60Q47 78 49 110Z" fill="currentColor" fill-opacity=".35" stroke-width="2.2"/>
+        <path d="M48 92C62 74 67 55 63 34Q48 52 48 84Z" fill="currentColor" fill-opacity=".35" stroke-width="2.2"/>
+        <path d="M48 26c-8-9-7-18 2-25 9 7 10 16 2 25z" fill="currentColor" fill-opacity=".35" stroke-width="2.2"/>
+      </g>
+    </symbol>
+    <symbol id="junco-b" viewBox="0 0 100 220">
+      <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M50 220C62 166 43 99 58 22" fill="none" stroke-width="3.1"/>
+        <path d="M53 181C37 165 29 148 28 127Q48 140 53 170Z" fill="currentColor" fill-opacity=".35" stroke-width="2.2"/>
+        <path d="M54 158C71 142 82 122 85 99Q63 114 54 150Z" fill="currentColor" fill-opacity=".35" stroke-width="2.2"/>
+        <path d="M53 134C39 115 34 94 38 72Q55 91 53 126Z" fill="currentColor" fill-opacity=".35" stroke-width="2.2"/>
+        <path d="M55 105C71 88 77 69 73 48Q57 66 55 98Z" fill="currentColor" fill-opacity=".35" stroke-width="2.2"/>
+        <path d="M56 77C45 60 44 42 52 24Q65 44 56 70Z" fill="currentColor" fill-opacity=".35" stroke-width="2.1"/>
+        <path d="M58 22c-8-9-7-17 2-24 9 7 10 16 2 24z" fill="currentColor" fill-opacity=".35" stroke-width="2.1"/>
+      </g>
+    </symbol>
+    <symbol id="junco-c" viewBox="0 0 100 220">
+      <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M50 220C39 164 51 106 43 39" fill="none" stroke-width="3.6"/>
+        <path d="M46 179C30 162 21 143 20 121Q41 137 46 169Z" fill="currentColor" fill-opacity=".35" stroke-width="2.5"/>
+        <path d="M47 148C64 131 74 110 75 86Q55 101 47 139Z" fill="currentColor" fill-opacity=".35" stroke-width="2.5"/>
+        <path d="M45 111C34 95 31 76 37 56Q52 77 45 103Z" fill="currentColor" fill-opacity=".35" stroke-width="2.3"/>
+        <path d="M43 39c-8-8-7-16 2-23 9 7 10 15 2 23z" fill="currentColor" fill-opacity=".35" stroke-width="2.3"/>
+      </g>
+    </symbol>  </defs>
+
+  <!-- ETAPA 1 — Atmosfera, névoa e luz suave no canto superior esquerdo. -->
+  <g id="fundo" mask="url(#dissolve-laterais)">
+    <g mask="url(#dissolve-topo)">
+      <rect width="1600" height="800" fill="url(#ambiente)"/>
+      <rect width="1600" height="800" fill="url(#luz-canto)"/>
+      <ellipse cx="800" cy="350" rx="660" ry="238" fill="url(#nevoa)" filter="url(#desfoque-nevoa)"/>
+      <ellipse cx="400" cy="430" rx="340" ry="82" fill="url(#nevoa)" opacity=".52" filter="url(#desfoque-nevoa)"/>
+      <ellipse cx="1220" cy="438" rx="330" ry="90" fill="url(#nevoa)" opacity=".46" filter="url(#desfoque-nevoa)"/>
+    </g>
+  </g>
+
+  <!-- ETAPA 1 — Copas orgânicas e troncos em camadas de distância. -->
+  <g id="arvores-longe" mask="url(#dissolve-laterais)">
+    <g mask="url(#dissolve-topo)">
+      <g fill="#3a5a6a" opacity=".16">
+        <path d="M0 294c23-31 54-45 87-39 9-52 48-85 97-81 24-67 92-91 146-55 31-51 87-67 133-38 33-40 89-51 132-25 31-19 70-16 98 8-31 24-56 61-72 105-25 37-65 55-112 45-43 27-88 35-132 22-44 40-102 41-145 6-45 27-98 20-126-16-39 23-82 20-111-7-37 34-80 42-125 28z"/>
+        <path d="M1600 282c-25-34-57-47-91-38-6-54-44-91-92-90-20-67-85-96-142-63-30-54-84-74-132-47-36-44-91-59-136-34-31-22-70-21-100 2 30 27 52 65 65 110 22 39 61 60 108 53 41 30 85 41 130 31 40 44 98 48 144 16 42 31 96 27 126-7 37 26 80 26 111 1 35 37 78 48 124 37z"/>
+      </g>
+      <g fill="#2f4a32" opacity=".2">
+        <path d="M0 337c37-36 78-46 122-29 19-37 51-56 91-51 29-48 77-64 121-40 41-39 92-43 130-9 38-28 82-27 116 3 27-20 60-21 86-2-30 29-54 67-69 112-29 34-69 45-113 31-40 35-87 42-130 19-41 35-91 30-125-4-43 20-85 10-109-24-44 17-84 10-111-18-40 26-78 30-109 12z"/>
+        <path d="M1600 328c-34-34-75-43-118-25-17-42-50-61-91-57-27-50-75-68-121-45-38-41-89-48-130-16-40-32-84-34-119-6-28-23-61-27-87-10 28 31 50 70 64 116 27 37 67 51 111 40 38 38 85 48 129 27 38 39 88 39 124 7 41 24 83 17 110-14 43 20 83 16 111-11 38 29 76 35 117 19z"/>
+      </g>
+      <!-- Seis troncos distantes, estreitos, azulados e pouco opacos. -->
+      <g fill="#3a5a6a" opacity=".2">
+        <path d="M115 0c10 0 17 2 24 5l-11 276 28 157-20-5-32-139 1-294z"/>
+        <path d="M305 0c8 0 14 1 21 4l-17 301 34 131-18-3-39-121L305 0z"/>
+        <path d="M472 0c9 0 16 2 23 5l-7 288 29 141-18-6-35-129z"/>
+        <path d="M1118 0c9 0 16 2 23 5l-11 294 33 138-19-5-37-124z"/>
+        <path d="M1308 0c8 0 15 2 22 5l-19 282 31 151-19-6-35-134z"/>
+        <path d="M1491 0c10 0 17 2 24 5l4 290 32 144-20-5-37-131z"/>
+      </g>
+      <!-- Troncos distantes no centro, suaves na névoa. -->
+      <g fill="#3a5a6a" opacity=".1">
+        <path d="M606 0h12l-7 315 15 184-12-5-16-168z"/>
+        <path d="M788 0h10l7 292 17 205-12-4-19-185z"/>
+        <path d="M966 0h13l-13 326 16 171-12-4-18-156z"/>
+      </g>
+      <!-- Duas faixas horizontais de névoa com pontas transparentes. -->
+      <path d="M0 420c240-20 470 16 720 2 295-17 565-29 880 1v70c-295-25-574-3-864 9-263 11-500-23-736 4z" fill="url(#faixa-nevoa-1)"/>
+      <path d="M0 493c285-22 480 20 758 8 280-12 533-30 842-1v66c-308-21-570 2-855 13-278 11-489-23-745 1z" fill="url(#faixa-nevoa-2)"/>
+      <!-- Seis troncos frontais, mais largos e escuros, apenas nas laterais. -->
+      <g fill="#1a2f23" opacity=".4">
+        <path d="M0 0h48c-5 91 3 184 25 273l35 277-35 10-56-263C5 194-3 98 0 0z"/>
+        <path d="M184 0c15 0 26 3 38 8l-15 240 43 304-34 8-57-288z"/>
+        <path d="M365 0c14 0 25 3 36 8l-13 245 36 300-31 5-47-283z"/>
+        <path d="M1152 0c14 0 26 3 38 8l-16 263 39 279-34 7-52-302z"/>
+        <path d="M1378 0c14 0 25 3 37 8l-5 251 40 292-34 5-50-276z"/>
+        <path d="M1550 0h50v550l-32 8-27-281z"/>
+      </g>
+      <!-- Copas próximas em curvas orgânicas, abertas no centro da cena. -->
+      <g fill="#1a2f23" opacity=".4">
+        <path d="M0 355c25-42 61-58 102-43 20-49 60-68 105-48 28-52 80-65 123-34 37-34 83-34 119-2 36-27 77-24 105 8-32 26-56 65-71 109-29 34-72 43-113 25-44 37-96 40-136 7-47 23-92 8-115-31-43 18-83 7-108-29-36 24-74 22-111 0z"/>
+        <path d="M1600 349c-30-38-67-50-109-34-22-47-62-63-106-39-32-50-84-59-125-25-40-32-87-27-120 8-35-23-77-18-103 16 31 30 51 70 62 115 27 37 69 49 112 34 41 36 93 36 135 1 43 20 89 3 111-35 42 18 82 3 104-34 35 24 73 24 110-2z"/>
+      </g>
+      <!-- Borda de terra distante, irregular e suavizada antes de y~560. -->
+      <path d="M0 505c128-30 231-20 348 1 112 21 201 31 314 17 107-13 189-37 304-25 113 12 208 32 322 20 111-12 208-31 312-15v58c-115-10-212 11-322 18-127 9-225-9-339-19-112-10-196 20-306 27-123 8-223-10-337-30-110-19-196-22-296 3z" fill="url(#margem-distante)"/>
+    </g>
+  </g>
+
+  <!-- ETAPA 3 — Juncos distantes, azulados, em cinco tufos de cada lado. -->
+  <g id="juncos-longe" mask="url(#dissolve-juncos)" color="#3a5a6a">
+    <!-- Tufo distante 1. -->
+    <g transform="translate(27 600) rotate(-10) scale(.48)" opacity="0.40"><use href="#junco-a" x="-50" y="-220" width="100" height="220"/><ellipse rx="22" ry="6" fill="none" stroke="#3a5a6a" stroke-width="4" opacity=".7"/></g>
+    <g transform="translate(50 618) rotate(1) scale(.55)" opacity="0.43"><use href="#junco-b" x="-50" y="-220" width="100" height="220"/><ellipse rx="22" ry="6" fill="none" stroke="#3a5a6a" stroke-width="4" opacity=".7"/></g>
+    <!-- Tufo distante 2. -->
+    <g transform="translate(137 625) rotate(-3) scale(.55)" opacity="0.43"><use href="#junco-b" x="-50" y="-220" width="100" height="220"/><ellipse rx="22" ry="6" fill="none" stroke="#3a5a6a" stroke-width="4" opacity=".7"/></g>
+    <g transform="translate(160 643) rotate(8) scale(.48)" opacity="0.46"><use href="#junco-c" x="-50" y="-220" width="100" height="220"/><ellipse rx="22" ry="6" fill="none" stroke="#3a5a6a" stroke-width="4" opacity=".7"/></g>
+    <!-- Tufo distante 3. -->
+    <g transform="translate(247 590) rotate(4) scale(.48)" opacity="0.46"><use href="#junco-c" x="-50" y="-220" width="100" height="220"/><ellipse rx="22" ry="6" fill="none" stroke="#3a5a6a" stroke-width="4" opacity=".7"/></g>
+    <g transform="translate(270 608) rotate(-6) scale(.55)" opacity="0.49"><use href="#junco-a" x="-50" y="-220" width="100" height="220"/><ellipse rx="22" ry="6" fill="none" stroke="#3a5a6a" stroke-width="4" opacity=".7"/></g>
+    <!-- Tufo distante 4. -->
+    <g transform="translate(357 630) rotate(-10) scale(.55)" opacity="0.49"><use href="#junco-a" x="-50" y="-220" width="100" height="220"/><ellipse rx="22" ry="6" fill="none" stroke="#3a5a6a" stroke-width="4" opacity=".7"/></g>
+    <g transform="translate(380 648) rotate(1) scale(.48)" opacity="0.52"><use href="#junco-b" x="-50" y="-220" width="100" height="220"/><ellipse rx="22" ry="6" fill="none" stroke="#3a5a6a" stroke-width="4" opacity=".7"/></g>
+    <!-- Tufo distante 5. -->
+    <g transform="translate(447 610) rotate(-3) scale(.48)" opacity="0.52"><use href="#junco-b" x="-50" y="-220" width="100" height="220"/><ellipse rx="22" ry="6" fill="none" stroke="#3a5a6a" stroke-width="4" opacity=".7"/></g>
+    <g transform="translate(470 628) rotate(8) scale(.55)" opacity="0.55"><use href="#junco-c" x="-50" y="-220" width="100" height="220"/><ellipse rx="22" ry="6" fill="none" stroke="#3a5a6a" stroke-width="4" opacity=".7"/></g>
+    <!-- Tufo distante 6. -->
+    <g transform="translate(1172 616) rotate(4) scale(.55)" opacity="0.55"><use href="#junco-c" x="-50" y="-220" width="100" height="220"/><ellipse rx="22" ry="6" fill="none" stroke="#3a5a6a" stroke-width="4" opacity=".7"/></g>
+    <g transform="translate(1195 634) rotate(-6) scale(.48)" opacity="0.40"><use href="#junco-a" x="-50" y="-220" width="100" height="220"/><ellipse rx="22" ry="6" fill="none" stroke="#3a5a6a" stroke-width="4" opacity=".7"/></g>
+    <!-- Tufo distante 7. -->
+    <g transform="translate(1262 590) rotate(-10) scale(.48)" opacity="0.40"><use href="#junco-a" x="-50" y="-220" width="100" height="220"/><ellipse rx="22" ry="6" fill="none" stroke="#3a5a6a" stroke-width="4" opacity=".7"/></g>
+    <g transform="translate(1285 608) rotate(1) scale(.55)" opacity="0.43"><use href="#junco-b" x="-50" y="-220" width="100" height="220"/><ellipse rx="22" ry="6" fill="none" stroke="#3a5a6a" stroke-width="4" opacity=".7"/></g>
+    <!-- Tufo distante 8. -->
+    <g transform="translate(1352 630) rotate(-3) scale(.55)" opacity="0.43"><use href="#junco-b" x="-50" y="-220" width="100" height="220"/><ellipse rx="22" ry="6" fill="none" stroke="#3a5a6a" stroke-width="4" opacity=".7"/></g>
+    <g transform="translate(1375 648) rotate(8) scale(.48)" opacity="0.46"><use href="#junco-c" x="-50" y="-220" width="100" height="220"/><ellipse rx="22" ry="6" fill="none" stroke="#3a5a6a" stroke-width="4" opacity=".7"/></g>
+    <!-- Tufo distante 9. -->
+    <g transform="translate(1442 600) rotate(4) scale(.48)" opacity="0.46"><use href="#junco-c" x="-50" y="-220" width="100" height="220"/><ellipse rx="22" ry="6" fill="none" stroke="#3a5a6a" stroke-width="4" opacity=".7"/></g>
+    <g transform="translate(1465 618) rotate(-6) scale(.55)" opacity="0.49"><use href="#junco-a" x="-50" y="-220" width="100" height="220"/><ellipse rx="22" ry="6" fill="none" stroke="#3a5a6a" stroke-width="4" opacity=".7"/></g>
+    <!-- Tufo distante 10. -->
+    <g transform="translate(1527 626) rotate(-10) scale(.55)" opacity="0.49"><use href="#junco-a" x="-50" y="-220" width="100" height="220"/><ellipse rx="22" ry="6" fill="none" stroke="#3a5a6a" stroke-width="4" opacity=".7"/></g>
+    <g transform="translate(1550 644) rotate(1) scale(.48)" opacity="0.52"><use href="#junco-b" x="-50" y="-220" width="100" height="220"/><ellipse rx="22" ry="6" fill="none" stroke="#3a5a6a" stroke-width="4" opacity=".7"/></g>
+  </g>
+  <!-- ETAPA 2 — Água do pântano, gradiente suave e ondulações. -->
+  <g id="agua" mask="url(#dissolve-laterais)">
+    <path d="M0 560c188-15 358 8 535 1 195-8 342-12 529-2 183 10 355-3 536-1v242H0z" fill="url(#agua-gradiente)"/>
+    <path d="M0 560c188-15 358 8 535 1 195-8 342-12 529-2 183 10 355-3 536-1v88c-181-8-351 13-536 4-190-9-344-2-529 7-184 9-354-8-535 3z" fill="url(#agua-borda)"/>
+    <g fill="none" stroke-linecap="round">
+      <ellipse cx="810" cy="660" rx="470" ry="31" stroke="#3a5a6a" stroke-width="3" opacity=".14" transform="rotate(2 810 660)"/>
+      <ellipse cx="835" cy="680" rx="390" ry="25" stroke="#6b8e3a" stroke-width="2" opacity=".12" transform="rotate(-2 835 680)"/>
+      <ellipse cx="360" cy="634" rx="192" ry="17" stroke="#3a5a6a" stroke-width="2" opacity=".14"/>
+      <ellipse cx="1230" cy="640" rx="214" ry="19" stroke="#6b8e3a" stroke-width="2.5" opacity=".12"/>
+      <ellipse cx="285" cy="706" rx="238" ry="24" stroke="#6b8e3a" stroke-width="3" opacity=".13" transform="rotate(3 285 706)"/>
+      <ellipse cx="1290" cy="716" rx="256" ry="27" stroke="#3a5a6a" stroke-width="3" opacity=".15" transform="rotate(-1.5 1290 716)"/>
+      <ellipse cx="795" cy="746" rx="520" ry="30" stroke="#3a5a6a" stroke-width="4" opacity=".12"/>
+      <ellipse cx="425" cy="776" rx="305" ry="16" stroke="#6b8e3a" stroke-width="2" opacity=".1"/>
+      <ellipse cx="1130" cy="779" rx="332" ry="18" stroke="#6b8e3a" stroke-width="2.5" opacity=".11"/>
+      <ellipse cx="720" cy="664" rx="52" ry="10" stroke="#6b8e3a" stroke-width="2" opacity=".24"/>
+      <ellipse cx="720" cy="664" rx="82" ry="16" stroke="#3a5a6a" stroke-width="2.5" opacity=".21"/>
+      <ellipse cx="720" cy="665" rx="116" ry="22" stroke="#6b8e3a" stroke-width="3" opacity=".18"/>
+      <ellipse cx="720" cy="666" rx="154" ry="29" stroke="#3a5a6a" stroke-width="3.5" opacity=".16"/>
+      <ellipse cx="720" cy="666" rx="194" ry="36" stroke="#6b8e3a" stroke-width="2" opacity=".12"/>
+    </g>
+  </g>
+
+  <!-- Margem de terra e musgo integrada à paisagem. -->
+  <g id="margem" mask="url(#dissolve-laterais)">
+    <path d="M520 634c25-15 36-25 57-39 18-12 40-14 61-11 19-3 34-13 57-12 24 2 40 13 62 10 26-4 42-17 67-14 22 2 35 14 56 13 20-1 35-9 53-6 14 3 24 9 34 18-17 15-31 28-49 38-37 21-85 30-142 29l-170-1c-40-1-68-7-86-25z" fill="url(#terra)"/>
+    <path d="M520 634c25-15 36-25 57-39 18-12 40-14 61-11 19-3 34-13 57-12 24 2 40 13 62 10 26-4 42-17 67-14 22 2 35 14 56 13 20-1 35-9 53-6 14 3 24 9 34 18" fill="none" stroke="#6b8e3a" stroke-width="5" stroke-linecap="round" opacity=".3"/>
+    <path d="M548 658c74 10 187 15 281 3 32-4 59-12 83-24 8 12 5 24-9 34-34 24-105 34-197 32-85-2-146-15-168-31-8-6-5-11 10-14z" fill="#0d1a14" opacity=".15"/>
+    <path d="M581 621c21-8 35-8 53-3m33-15c16-7 31-6 45 1m40 1c18-8 34-7 49 1m31 5c16-5 29-4 42 2" fill="none" stroke="#6b8e3a" stroke-width="3" stroke-linecap="round" opacity=".3"/>
+  </g>
+
+  <!-- ETAPA 2 — Vitórias-régias, cada qual com sombra deslocada na água. -->
+  <g id="vitorias-regias" mask="url(#dissolve-laterais)">
+    <g transform="translate(116 625) rotate(-12) scale(.58 .42)" opacity=".5"><ellipse cx="60" cy="46.9" rx="48" ry="13" fill="#0d1a14" opacity=".15"/><use href="#folha-vitoria-a" x="0" y="0" width="120" height="70"/></g>
+    <g transform="translate(312 650) rotate(9) scale(.72 .48)" opacity=".44"><ellipse cx="60" cy="45.4" rx="48" ry="13" fill="#0d1a14" opacity=".15"/><use href="#folha-vitoria-b" x="0" y="0" width="120" height="70"/></g>
+    <g transform="translate(1092 620) rotate(-7) scale(.62 .43)" opacity=".48"><ellipse cx="60" cy="46.6" rx="48" ry="13" fill="#0d1a14" opacity=".15"/><use href="#folha-vitoria-a" x="0" y="0" width="120" height="70"/></g>
+    <g transform="translate(1370 650) rotate(15) scale(.76 .5)" opacity=".42"><ellipse cx="60" cy="45" rx="48" ry="13" fill="#0d1a14" opacity=".15"/><use href="#folha-vitoria-b" x="0" y="0" width="120" height="70"/></g>
+    <g transform="translate(206 704) rotate(-19) scale(.92 .58)" opacity=".43"><ellipse cx="60" cy="43.6" rx="48" ry="13" fill="#0d1a14" opacity=".15"/><use href="#folha-vitoria-b" x="0" y="0" width="120" height="70"/></g>
+    <g transform="translate(1238 690) rotate(11) scale(1.02 .6)" opacity=".44"><ellipse cx="60" cy="43.3" rx="48" ry="13" fill="#0d1a14" opacity=".15"/><use href="#folha-vitoria-a" x="0" y="0" width="120" height="70"/></g>
+    <g transform="translate(934 724) rotate(-8) scale(.78 .48)" opacity=".36"><ellipse cx="60" cy="45.4" rx="48" ry="13" fill="#0d1a14" opacity=".15"/><use href="#folha-vitoria-a" x="0" y="0" width="120" height="70"/></g>
+    <g transform="translate(80 730) rotate(8) scale(1.32 .68)" opacity=".38"><ellipse cx="60" cy="42.4" rx="48" ry="13" fill="#0d1a14" opacity=".15"/><use href="#folha-vitoria-a" x="0" y="0" width="120" height="70"/></g>
+    <g transform="translate(1270 744) rotate(-13) scale(1.4 .72)" opacity=".4"><ellipse cx="60" cy="41.9" rx="48" ry="13" fill="#0d1a14" opacity=".15"/><use href="#folha-vitoria-b" x="0" y="0" width="120" height="70"/></g>
+  </g>`n
+  <!-- ETAPA 3 — Juncos próximos, dez tufos com espaços entre eles. -->
+  <g id="juncos-perto" mask="url(#dissolve-juncos)" color="#3f5a45">
+    <!-- Tufo próximo 1. -->
+    <g transform="translate(16 606) rotate(-10) scale(.82)" opacity="0.40"><use href="#junco-b" x="-50" y="-220" width="100" height="220"/><ellipse rx="28" ry="8" fill="none" stroke="#6b8e3a" stroke-width="4" opacity=".35"/></g>
+    <g transform="translate(50 615) rotate(3) scale(.96)" opacity="0.44"><use href="#junco-c" x="-50" y="-220" width="100" height="220"/><ellipse rx="28" ry="8" fill="none" stroke="#6b8e3a" stroke-width="4" opacity=".35"/></g>
+    <!-- Tufo próximo 2. -->
+    <g transform="translate(126 631) rotate(-5) scale(.96)" opacity="0.44"><use href="#junco-c" x="-50" y="-220" width="100" height="220"/><ellipse rx="28" ry="8" fill="none" stroke="#6b8e3a" stroke-width="4" opacity=".35"/></g>
+    <g transform="translate(160 640) rotate(8) scale(.82)" opacity="0.48"><use href="#junco-a" x="-50" y="-220" width="100" height="220"/><ellipse rx="28" ry="8" fill="none" stroke="#6b8e3a" stroke-width="4" opacity=".35"/></g>
+    <!-- Tufo próximo 3. -->
+    <g transform="translate(236 596) rotate(0) scale(.82)" opacity="0.48"><use href="#junco-a" x="-50" y="-220" width="100" height="220"/><ellipse rx="28" ry="8" fill="none" stroke="#6b8e3a" stroke-width="4" opacity=".35"/></g>
+    <g transform="translate(270 605) rotate(-8) scale(.96)" opacity="0.52"><use href="#junco-b" x="-50" y="-220" width="100" height="220"/><ellipse rx="28" ry="8" fill="none" stroke="#6b8e3a" stroke-width="4" opacity=".35"/></g>
+    <!-- Tufo próximo 4. -->
+    <g transform="translate(346 636) rotate(5) scale(.96)" opacity="0.52"><use href="#junco-b" x="-50" y="-220" width="100" height="220"/><ellipse rx="28" ry="8" fill="none" stroke="#6b8e3a" stroke-width="4" opacity=".35"/></g>
+    <g transform="translate(380 645) rotate(-3) scale(.82)" opacity="0.56"><use href="#junco-c" x="-50" y="-220" width="100" height="220"/><ellipse rx="28" ry="8" fill="none" stroke="#6b8e3a" stroke-width="4" opacity=".35"/></g>
+    <!-- Tufo próximo 5. -->
+    <g transform="translate(436 616) rotate(10) scale(.82)" opacity="0.56"><use href="#junco-c" x="-50" y="-220" width="100" height="220"/><ellipse rx="28" ry="8" fill="none" stroke="#6b8e3a" stroke-width="4" opacity=".35"/></g>
+    <g transform="translate(470 625) rotate(2) scale(.96)" opacity="0.60"><use href="#junco-a" x="-50" y="-220" width="100" height="220"/><ellipse rx="28" ry="8" fill="none" stroke="#6b8e3a" stroke-width="4" opacity=".35"/></g>
+    <!-- Tufo próximo 6. -->
+    <g transform="translate(1161 622) rotate(-6) scale(.96)" opacity="0.60"><use href="#junco-a" x="-50" y="-220" width="100" height="220"/><ellipse rx="28" ry="8" fill="none" stroke="#6b8e3a" stroke-width="4" opacity=".35"/></g>
+    <g transform="translate(1195 631) rotate(7) scale(.82)" opacity="0.40"><use href="#junco-b" x="-50" y="-220" width="100" height="220"/><ellipse rx="28" ry="8" fill="none" stroke="#6b8e3a" stroke-width="4" opacity=".35"/></g>
+    <!-- Tufo próximo 7. -->
+    <g transform="translate(1251 596) rotate(-1) scale(.82)" opacity="0.40"><use href="#junco-b" x="-50" y="-220" width="100" height="220"/><ellipse rx="28" ry="8" fill="none" stroke="#6b8e3a" stroke-width="4" opacity=".35"/></g>
+    <g transform="translate(1285 605) rotate(-9) scale(.96)" opacity="0.44"><use href="#junco-c" x="-50" y="-220" width="100" height="220"/><ellipse rx="28" ry="8" fill="none" stroke="#6b8e3a" stroke-width="4" opacity=".35"/></g>
+    <!-- Tufo próximo 8. -->
+    <g transform="translate(1341 636) rotate(4) scale(.96)" opacity="0.44"><use href="#junco-c" x="-50" y="-220" width="100" height="220"/><ellipse rx="28" ry="8" fill="none" stroke="#6b8e3a" stroke-width="4" opacity=".35"/></g>
+    <g transform="translate(1375 645) rotate(-4) scale(.82)" opacity="0.48"><use href="#junco-a" x="-50" y="-220" width="100" height="220"/><ellipse rx="28" ry="8" fill="none" stroke="#6b8e3a" stroke-width="4" opacity=".35"/></g>
+    <!-- Tufo próximo 9. -->
+    <g transform="translate(1431 606) rotate(9) scale(.82)" opacity="0.48"><use href="#junco-a" x="-50" y="-220" width="100" height="220"/><ellipse rx="28" ry="8" fill="none" stroke="#6b8e3a" stroke-width="4" opacity=".35"/></g>
+    <g transform="translate(1465 615) rotate(1) scale(.96)" opacity="0.52"><use href="#junco-b" x="-50" y="-220" width="100" height="220"/><ellipse rx="28" ry="8" fill="none" stroke="#6b8e3a" stroke-width="4" opacity=".35"/></g>
+    <!-- Tufo próximo 10. -->
+    <g transform="translate(1516 632) rotate(-7) scale(.96)" opacity="0.52"><use href="#junco-b" x="-50" y="-220" width="100" height="220"/><ellipse rx="28" ry="8" fill="none" stroke="#6b8e3a" stroke-width="4" opacity=".35"/></g>
+    <g transform="translate(1550 641) rotate(6) scale(.82)" opacity="0.56"><use href="#junco-c" x="-50" y="-220" width="100" height="220"/><ellipse rx="28" ry="8" fill="none" stroke="#6b8e3a" stroke-width="4" opacity=".35"/></g>
+  </g>
+  <!-- ETAPA 3 — Juncos grandes em primeiro plano, fora da área central. -->
+  <g id="juncos-frente" mask="url(#dissolve-juncos)" color="#1a2f23" opacity=".5">
+    <g transform="translate(95 720) rotate(-6) scale(1.45)"><use href="#junco-a" x="-50" y="-220" width="100" height="220"/><ellipse rx="36" ry="10" fill="none" stroke="#6b8e3a" stroke-width="4" opacity=".35"/></g>
+    <g transform="translate(190 755) rotate(5) scale(1.6)"><use href="#junco-b" x="-50" y="-220" width="100" height="220"/><ellipse rx="36" ry="10" fill="none" stroke="#6b8e3a" stroke-width="4" opacity=".35"/></g>
+    <g transform="translate(315 696) rotate(-2) scale(1.32)"><use href="#junco-c" x="-50" y="-220" width="100" height="220"/><ellipse rx="36" ry="10" fill="none" stroke="#6b8e3a" stroke-width="4" opacity=".35"/></g>
+    <g transform="translate(1285 762) rotate(7) scale(1.55)"><use href="#junco-b" x="-50" y="-220" width="100" height="220"/><ellipse rx="36" ry="10" fill="none" stroke="#6b8e3a" stroke-width="4" opacity=".35"/></g>
+    <g transform="translate(1400 710) rotate(-8) scale(1.38)"><use href="#junco-a" x="-50" y="-220" width="100" height="220"/><ellipse rx="36" ry="10" fill="none" stroke="#6b8e3a" stroke-width="4" opacity=".35"/></g>
+    <g transform="translate(1515 744) rotate(3) scale(1.6)"><use href="#junco-c" x="-50" y="-220" width="100" height="220"/><ellipse rx="36" ry="10" fill="none" stroke="#6b8e3a" stroke-width="4" opacity=".35"/></g>
+  </g>
+</svg>

@@ -32,7 +32,7 @@ function createWindow() {
     height: 720,
     minWidth: 860,
     minHeight: 560,
-    backgroundColor: '#11150f',
+    backgroundColor: '#10150f',
     title: 'soundFrog',
     icon: path.join(__dirname, '..', '..', 'assets', 'icon.png'),
     autoHideMenuBar: true,
@@ -40,8 +40,8 @@ function createWindow() {
     // na cor do tema. O resto da faixa e nossa, com a logo.
     titleBarStyle: 'hidden',
     titleBarOverlay: {
-      color: '#121a0f',
-      symbolColor: '#8d9c7c',
+      color: '#171e15',
+      symbolColor: '#a0aa8d',
       height: 40,
     },
     webPreferences: {
