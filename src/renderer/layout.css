@@ -55,10 +55,12 @@
 /* ========================================================== transporte === */
 
 .transport {
+  --window-controls-inset: max(140px, calc(100vw - env(titlebar-area-x, 0px) - env(titlebar-area-width, 100vw) + 12px));
   display: flex;
   align-items: center;
   gap: 9px;
   padding: 8px 13px;
+  padding-right: var(--window-controls-inset);
   background: var(--ink-2);
   border-bottom: 1px solid var(--line-soft);
 }

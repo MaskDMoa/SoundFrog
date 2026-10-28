@@ -58,10 +58,18 @@ body {
   -webkit-app-region: drag;
   display: flex;
   align-items: center;
+  flex: 0 0 var(--title-h);
+  min-height: var(--title-h);
   gap: 9px;
   padding: 0 14px;
   background: linear-gradient(180deg, var(--ink-2), rgba(18, 26, 15, 0.6));
   border-bottom: 1px solid var(--line-soft);
+}
+
+.titlebar button,
+.titlebar input,
+.titlebar select {
+  -webkit-app-region: no-drag;
 }
 
 .titlebar .logo {
